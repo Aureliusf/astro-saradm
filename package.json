@@ -10,10 +10,18 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
-    "@tailwindcss/vite": "^4.1.16",
+    "@sanity/astro": "^3.2.10",
+    "@sanity/client": "^7.12.1",
+    "@tailwindcss/vite": "^4.1.17",
     "@types/canvas-confetti": "^1.9.0",
     "astro": "^5.15.4",
+    "astro-portabletext": "^0.11.3",
     "canvas-confetti": "^1.9.3",
-    "tailwindcss": "^4.1.16"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-is": "^19.2.0",
+    "sanity": "^4.14.1",
+    "styled-components": "^6.1.19",
+    "tailwindcss": "^4.1.17"
   }
 }
