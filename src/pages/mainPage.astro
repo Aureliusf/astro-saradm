@@ -1,0 +1,98 @@
+---
+import type { SanityDocument } from "@sanity/client";
+import { sanityClient } from "sanity:client";
+import { Image } from "astro:assets";
+import imageUrlBuilder from '@sanity/image-url';
+
+import '../styles/global.css'; 
+
+const builder = imageUrlBuilder(sanityClient);
+
+function urlFor(source: any) {
+  return builder.image(source);
+}
+
+function generateImageProps(image: any) {
+  const base = urlFor(image).quality(90).auto('format');
+  return {
+    src: base.width(800).url(),
+    srcset: [400, 800, 1200]
+      .map(w => `${base.width(w).url()} ${w}w`)
+      .join(', '),
+    sizes: '(min-width: 768px) 352px, calc(100vw - 4rem)',
+  };
+}
+
+const QUERY = `*[_type == "home"][0] {
+  ...,
+  topProjects[]->{
+    title,
+    slug,
+    cover
+  }
+}`;
+
+const content = await sanityClient.fetch<SanityDocument>(QUERY);
+---
+
+<main class="container mx-auto min-h-screen max-w-3xl p-8">
+  {content ? (
+    <>
+      <h1 class=" font-serif text-center text-4xl font-bold mb-8 ">
+        {content.title}
+      </h1>
+      <div class="max-w-lg mx-auto">
+        <img
+          src={generateImageProps(content.cover.asset).src}
+          srcset={generateImageProps(content.cover.asset).srcset}
+          sizes={generateImageProps(content.cover.asset).sizes}
+          alt={content.title || ""} 
+          class="w-full aspect-square object-cover rounded-lg overflow-hidden shadow-lg" 
+          loading="lazy"
+          decoding="async"
+        />
+
+      </div>
+
+      <div></div>
+
+      <div class="text-center font-serif bg-[#a48374] text-[#f1ede6] rounded-lg p-6">
+        <p>
+          {content.shortDescription}
+        </p>
+      </div>
+
+      <div></div>
+
+      <ul class="flex flex-col gap-y-8"> 
+        {content.topProjects.map((post, index) => {
+          const imageProps = generateImageProps(post.cover.image);
+          return (
+            <li class="group">
+              <a href={`/${post.slug.current}`} 
+                class={`flex flex-col md:flex-row items-center gap-2 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
+              >
+                <div class="w-full md:w-1/2">
+                  <img
+                    src={imageProps.src}
+                    srcset={imageProps.srcset}
+                    sizes={imageProps.sizes}
+                    alt={post.cover.alt || post.title || ""}
+                    class="w-full aspect-square object-cover rounded-lg shadow-lg overflow-hidden"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="w-full md:w-1/2">
+                  <h2 class="text-2xl font-bold group-hover:underline mt-4 md:mt-0 text-center md:text-left">{post.title}</h2>
+                </div>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </>
+  ) : (
+    <h1 class="text-4xl font-bold mb-8">No content found</h1>
+  )}
+</main>
