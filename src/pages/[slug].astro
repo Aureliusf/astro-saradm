@@ -5,6 +5,25 @@ import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { PortableText } from "astro-portabletext";
 
+import '../styles/global.css'; 
+
+const builder = imageUrlBuilder(sanityClient);
+
+function urlFor(source: SanityImageSource) {
+  return builder.image(source);
+}
+
+function generateImageProps(image: SanityImageSource) {
+  const base = urlFor(image).quality(90).auto('format');
+  return {
+    src: base.width(800).url(),
+    srcset: [400, 800, 1200]
+      .map(w => `${base.width(w).url()} ${w}w`)
+      .join(', '),
+    sizes: '(min-width: 640px) 50vw, 100vw',
+  };
+}
+
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, Astro.params);
 
@@ -15,32 +34,47 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
   return await sanityClient.fetch(SLUGS_QUERY, Astro.params);
 }
 
-const { projectId, dataset } = sanityClient.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
-const postImageUrl = post.image
-  ? urlFor(post.image)?.width(550).height(310).url()
+const postImageUrl = post.cover?.image
+  ? urlFor(post.cover.image)?.width(550).height(310).url()
   : null;
 ---
 
-<main class="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4">
-  <a href="/posts" class="hover:underline">&larr; Back to posts</a>
-  {
-    postImageUrl && (
-      <img
-        src={postImageUrl}
-        alt={post.title}
-        class="aspect-video rounded-xl"
-        width="550"
-        height="310"
-      />
-    )
-  }
-  <h1 class="text-4xl font-bold mb-8">{post.title}</h1>
-  <div class="prose">
-    <p>Published: {new Date(post.publishedAt).toLocaleDateString()}</p>
+<main class="container mx-auto min-h-screen max-w-3xl p-4 md:p-8 flex flex-col gap-4 bg-white">
+  <a href="/posts" class="text-left hover:underline">&larr; todos los proyectos</a>
+  <h1 class="text-3xl md:text-4xl font-bold mb-8 text-center">{post.title}</h1>
+  <div class="text-center gap-1">
+    <p>{new Date(post.publishedAt).getFullYear()}</p>
+  </div>
+  <div class="text-center">
     {Array.isArray(post.body) && <PortableText value={post.body} />}
+  </div>
+
+
+  {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
+    <div class="py-8">
+      <h2 class="text-center text-xl md:text-2xl font-bold mb-4">Photo Gallery</h2>
+      <div class="  gap-1 grid grid-cols-1 sm:grid-cols-2">
+        {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
+          if (!imageWithAlt.image) return null;
+          const imageProps = generateImageProps(imageWithAlt.image);
+          return (
+            <img
+              src={imageProps.src}
+              srcset={imageProps.srcset}
+              sizes={imageProps.sizes}
+              alt={imageWithAlt.alt || ""}
+              class=" w-full h-auto"
+              loading="lazy"
+              decoding="async"
+            />
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  <h2 class="text-center text-xl md:text-2xl font-bold ">Colaboradores</h2>
+  <div class="font-mono">
+    {Array.isArray(post.credits) && <PortableText value={post.credits} />}
   </div>
 </main>

@@ -1,0 +1,111 @@
+---
+import type { SanityDocument } from "@sanity/client";
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from '@sanity/image-url';
+import MainLayout from '../layouts/main.astro';
+
+// Re-using helper functions from mainPage.astro
+const builder = imageUrlBuilder(sanityClient);
+
+function urlFor(source: any) {
+  return builder.image(source);
+}
+
+function generateImageProps(image: any, sizes: string) {
+  const base = urlFor(image).quality(90).auto('format');
+  return {
+    src: base.width(800).url(),
+    srcset: [400, 800, 1200]
+      .map(w => `${base.width(w).url()} ${w}w`)
+      .join(', '),
+    sizes: sizes,
+  };
+}
+
+const POSTS_QUERY = `*[_type == "post"]{
+  _id,
+  title,
+  slug,
+  cover,
+  publishedAt,
+  "tags": tags[]->name
+}`;
+
+const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
+
+// Get all unique tags
+const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
+---
+<MainLayout title="Todos mis Proyectos">
+  <main class="container mx-auto min-h-screen max-w-3xl p-4 md:p-8">
+    <h1 class="text-center text-4xl md:text-5xl font-bold mb-8">Todos mis Proyectos</h1>
+
+    <!-- Tag Filters -->
+    <div id="tag-filters" class="flex justify-center flex-wrap gap-2 mb-8">
+      <button class="tag-button active bg-[#a48374] text-white rounded-lg px-4 py-2" data-tag="all">All</button>
+      {allTags.map(tag => (
+        <button class="tag-button bg-gray-200 text-gray-700 rounded-lg px-4 py-2" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+
+    <!-- Posts Gallery -->
+    <ul id="post-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {posts.map(post => {
+        const imageProps = generateImageProps(post.cover.image, '(min-width: 768px) 352px, calc(100vw - 2rem)');
+        return (
+          <li class="post-item group relative overflow-hidden rounded-lg shadow-lg" data-tags={(post.tags || []).join(',')}>
+            <a href={`/${post.slug.current}`} class="block">
+              <div class="relative">
+                <img
+                  src={imageProps.src}
+                  srcset={imageProps.srcset}
+                  sizes={imageProps.sizes}
+                  alt={post.cover.alt || post.title || ""}
+                  class="w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105 group-hover:blur-xs"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="absolute inset-0 flex flex-col items-center justify-center bg-[#a48374] bg-opacity-30 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+                  <h2 class="text-xl font-bold text-white text-center">{post.title}</h2>
+                  <p class="text-white text-center">{new Date(post.publishedAt).getFullYear()}</p>
+                </div>
+              </div>
+            </a>
+          </li>
+        )
+      })}
+    </ul>
+  </main>
+
+  <script>
+    const filterContainer = document.getElementById('tag-filters');
+    const postItems = document.querySelectorAll('.post-item');
+
+    filterContainer.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('tag-button')) {
+        // Update active button style
+        const currentActive = filterContainer.querySelector('.active');
+        if (currentActive) {
+            currentActive.classList.remove('active', 'bg-[#a48374]', 'text-white');
+            currentActive.classList.add('bg-gray-200', 'text-gray-700');
+        }
+        target.classList.add('active', 'bg-[#a48374]', 'text-white');
+        target.classList.remove('bg-gray-200', 'text-gray-700');
+
+        const selectedTag = target.dataset.tag;
+
+        postItems.forEach(item => {
+          const post = item as HTMLElement;
+          const postTags = post.dataset.tags.split(',');
+          
+          if (selectedTag === 'all' || postTags.includes(String(selectedTag))) {
+            post.style.display = 'block';
+          } else {
+            post.style.display = 'none';
+          }
+        });
+      }
+    });
+  </script>
+</MainLayout>
