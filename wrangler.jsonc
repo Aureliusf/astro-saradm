@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "astro-saradm.com",
+	"name": "saradm-website",
   "compatibility_date": "2025-11-09",
   "compatibility_flags": [
     "nodejs_compat",
