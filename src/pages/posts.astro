@@ -43,14 +43,14 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
 
     <!-- Tag Filters -->
     <div id="tag-filters" class="flex justify-center flex-wrap gap-2 mb-8">
-      <button class="tag-button active bg-[#a48374] text-white rounded-lg px-4 py-2" data-tag="all">All</button>
+      <button class="tag-button active bg-[#a48374] text-white rounded-lg px-4 py-2" data-tag="all">Todos</button>
       {allTags.map(tag => (
         <button class="tag-button bg-gray-200 text-gray-700 rounded-lg px-4 py-2" data-tag={tag}>{tag}</button>
       ))}
     </div>
 
     <!-- Posts Gallery -->
-    <ul id="post-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <ul id="post-gallery" class="grid grid-cols-1 md:grid-cols-3 gap-3">
       {posts.map(post => {
         const imageProps = generateImageProps(post.cover.image, '(min-width: 768px) 352px, calc(100vw - 2rem)');
         return (

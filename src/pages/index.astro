@@ -27,6 +27,7 @@ const QUERY = `*[_type == "home"][0] {
   ...,
   topProjects[]->{
     title,
+    subtitle,
     slug,
     cover
   }
@@ -39,9 +40,12 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
   <main class="flex flex-col font-serif container mx-auto min-h-screen max-w-3xl p-4 md:p-8">
     {content ? (
       <>
-        <h1 class=" text-center text-4xl md:text-5xl font-bold mb-8 ">
+        <h1 class=" text-center text-5xl md:text-6xl font-bold mb-8 ">
           {content.title}
         </h1>
+        <h2 class=" text-center text-2xl md:text-2xl font-bold mb-8 ">
+          {content.subtitle}
+        </h2>
         <div class="max-w-lg mx-auto">
           {imageProps && <img
             src={imageProps.src}
@@ -54,8 +58,8 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
           />}
         </div>
 
-        <div class="mt-6 mb-6">
-          <div class="text-center bg-[#a48374] text-[#f1ede6] rounded-lg p-6">
+        <div class="mt-6 mb-3">
+          <div class="text-center bg-[#f1ede6] text-[#a48374] rounded-lg p-4">
             <p>
               {content.shortDescription}
             </p>
