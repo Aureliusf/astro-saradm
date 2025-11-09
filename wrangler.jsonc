@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "saradm-website",
+	"name": "saradm",
   "compatibility_date": "2025-11-09",
   "compatibility_flags": [
     "nodejs_compat",
