@@ -13,8 +13,15 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         playfair: ['Playfair Display', 'serif'],
+        Monsieur: ['Monsieur La Doulaise', 'cursive'],
+        Tangerine: ['Tangerine', 'cursive'],
+        Birthstone: ['Birthstone', 'cursive'],
+        Nautigal: ['The Nautigal', 'cursive'],
+        Poiret: ['Poiret One', 'sans-serif'],
+        Dongle: ['Dongle', 'sans-serif'],
+        Nanum: ['Nanum Myeongjo', 'serif'],
       },
-      
+
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
