@@ -4,7 +4,8 @@ import { sanityClient } from "sanity:client";
 import imageUrlBuilder from '@sanity/image-url';
 import MainLayout from '../layouts/main.astro';
 
-// Re-using helper functions from mainPage.astro
+import Footer from '../components/Footer.astro';
+
 const builder = imageUrlBuilder(sanityClient);
 
 function urlFor(source: any) {
@@ -78,34 +79,38 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
   </main>
 
   <script>
-    const filterContainer = document.getElementById('tag-filters');
-    const postItems = document.querySelectorAll('.post-item');
-
-    filterContainer.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.classList.contains('tag-button')) {
-        // Update active button style
-        const currentActive = filterContainer.querySelector('.active');
-        if (currentActive) {
-            currentActive.classList.remove('active', 'bg-[#a48374]', 'text-white');
-            currentActive.classList.add('bg-gray-200', 'text-gray-700');
+        const filterContainer = document.getElementById('tag-filters');
+        const postItems = document.querySelectorAll('.post-item');
+    
+        if (filterContainer) {
+          filterContainer.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains('tag-button')) {
+              // Update active button style
+              const currentActive = filterContainer.querySelector('.active');
+              if (currentActive) {
+                  currentActive.classList.remove('active', 'bg-[#a48374]', 'text-white');
+                  currentActive.classList.add('bg-gray-200', 'text-gray-700');
+              }
+              target.classList.add('active', 'bg-[#a48374]', 'text-white');
+              target.classList.remove('bg-gray-200', 'text-gray-700');
+    
+              const selectedTag = target.dataset.tag;
+    
+              postItems.forEach(item => {
+                const post = item as HTMLElement;
+                const postTags = post.dataset.tags ? post.dataset.tags.split(',') : [];
+                
+                if (selectedTag === 'all' || postTags.includes(String(selectedTag))) {
+                  post.style.display = 'block';
+                } else {
+                  post.style.display = 'none';
+                }
+              });
+            }
+          });
         }
-        target.classList.add('active', 'bg-[#a48374]', 'text-white');
-        target.classList.remove('bg-gray-200', 'text-gray-700');
-
-        const selectedTag = target.dataset.tag;
-
-        postItems.forEach(item => {
-          const post = item as HTMLElement;
-          const postTags = post.dataset.tags.split(',');
-          
-          if (selectedTag === 'all' || postTags.includes(String(selectedTag))) {
-            post.style.display = 'block';
-          } else {
-            post.style.display = 'none';
-          }
-        });
-      }
-    });
   </script>
 </MainLayout>
+  
+<Footer />

@@ -5,6 +5,9 @@ import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { PortableText } from "astro-portabletext";
 
+import MainLayout from '../layouts/main.astro';
+import Footer from '../components/Footer.astro';
+
 import '../styles/global.css'; 
 
 const builder = imageUrlBuilder(sanityClient);
@@ -25,6 +28,7 @@ function generateImageProps(image: SanityImageSource) {
 }
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
+
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, Astro.params);
 
 export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
@@ -33,48 +37,47 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
   }`;
   return await sanityClient.fetch(SLUGS_QUERY, Astro.params);
 }
-
-const postImageUrl = post.cover?.image
-  ? urlFor(post.cover.image)?.width(550).height(310).url()
-  : null;
 ---
 
-<main class="container mx-auto min-h-screen max-w-3xl p-4 md:p-8 flex flex-col gap-4 bg-white">
-  <a href="/posts" class="text-left hover:underline">&larr; todos los proyectos</a>
-  <h1 class="text-3xl md:text-4xl font-bold mb-8 text-center">{post.title}</h1>
-  <div class="text-center gap-1">
-    <p>{new Date(post.publishedAt).getFullYear()}</p>
-  </div>
-  <div class="text-center">
-    {Array.isArray(post.body) && <PortableText value={post.body} />}
-  </div>
-
-
-  {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
-    <div class="py-8">
-      <h2 class="text-center text-xl md:text-2xl font-bold mb-4">Photo Gallery</h2>
-      <div class="  gap-1 grid grid-cols-1 sm:grid-cols-2">
-        {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
-          if (!imageWithAlt.image) return null;
-          const imageProps = generateImageProps(imageWithAlt.image);
-          return (
-            <img
-              src={imageProps.src}
-              srcset={imageProps.srcset}
-              sizes={imageProps.sizes}
-              alt={imageWithAlt.alt || ""}
-              class=" w-full h-auto"
-              loading="lazy"
-              decoding="async"
-            />
-          );
-        })}
-      </div>
+<MainLayout title="Todos mis Proyectos">
+  <main class="container mx-auto min-h-screen max-w-3xl p-4 md:p-8 flex flex-col gap-4 bg-white">
+    <a href="/posts" class="text-left hover:underline">&larr; todos los proyectos</a>
+    <h1 class="text-3xl md:text-4xl font-bold mb-8 text-center">{post.title}</h1>
+    <div class="text-center gap-1">
+      <p>{new Date(post.publishedAt).getFullYear()}</p>
     </div>
-  )}
+    <div class="text-center">
+      {Array.isArray(post.body) && <PortableText value={post.body} />}
+    </div>
 
-  <h2 class="text-center text-xl md:text-2xl font-bold ">Colaboradores</h2>
-  <div class="font-mono">
-    {Array.isArray(post.credits) && <PortableText value={post.credits} />}
-  </div>
-</main>
+
+    {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
+      <div class="py-8">
+        <h2 class="text-center text-xl md:text-2xl font-bold mb-4">Photo Gallery</h2>
+        <div class="  gap-1 grid grid-cols-1 sm:grid-cols-2">
+          {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
+            if (!imageWithAlt.image) return null;
+            const imageProps = generateImageProps(imageWithAlt.image);
+            return (
+              <img
+                src={imageProps.src}
+                srcset={imageProps.srcset}
+                sizes={imageProps.sizes}
+                alt={imageWithAlt.alt || ""}
+                class=" w-full h-auto"
+                loading="lazy"
+                decoding="async"
+              />
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+    <h2 class="text-center text-xl md:text-2xl font-bold ">Créditos</h2>
+    <div class="font-mono">
+      {Array.isArray(post.credits) && <PortableText value={post.credits} />}
+    </div>
+  </main>
+</MainLayout>
+<Footer />
