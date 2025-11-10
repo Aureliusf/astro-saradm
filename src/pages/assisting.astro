@@ -3,7 +3,6 @@ import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
 import imageUrlBuilder from '@sanity/image-url';
 import MainLayout from '../layouts/main.astro';
-
 import Footer from '../components/Footer.astro';
 
 const builder = imageUrlBuilder(sanityClient);
@@ -23,7 +22,7 @@ function generateImageProps(image: any, sizes: string) {
   };
 }
 
-const POSTS_QUERY = `*[_type == "post" && !('Asistente' in tags[]->name)]{
+const POSTS_QUERY = `*[_type == "post" && 'Asistente' in tags[]->name]{
   _id,
   title,
   slug,
@@ -33,21 +32,10 @@ const POSTS_QUERY = `*[_type == "post" && !('Asistente' in tags[]->name)]{
 }`;
 
 const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
-
-// Get all unique tags
-const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
 ---
-<MainLayout title="Todos mis Proyectos">
+<MainLayout title="Assisting">
   <main class="container mx-auto min-h-screen max-w-3xl p-4 md:p-8">
-    <h1 class="text-center text-4xl md:text-5xl font-bold mb-8">Todos mis Proyectos</h1>
-
-    <!-- Tag Filters -->
-    <div id="tag-filters" class="text-xl md:text-2xl flex justify-center flex-wrap gap-2 mb-8">
-      <button class="tag-button active bg-[#a48374] text-white rounded-lg px-4 py-2" data-tag="all">Todos</button>
-      {allTags.map(tag => (
-        <button class="tag-button bg-gray-200 text-gray-700 rounded-lg px-4 py-2" data-tag={tag}>{tag}</button>
-      ))}
-    </div>
+    <h1 class="text-center text-4xl md:text-5xl font-bold mb-8">Assisting</h1>
 
     <!-- Posts Gallery -->
     <ul id="post-gallery" class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -77,40 +65,5 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
       })}
     </ul>
   </main>
-
-  <script>
-        const filterContainer = document.getElementById('tag-filters');
-        const postItems = document.querySelectorAll('.post-item');
-    
-        if (filterContainer) {
-          filterContainer.addEventListener('click', (e) => {
-            const target = e.target as HTMLElement;
-            if (target.classList.contains('tag-button')) {
-              // Update active button style
-              const currentActive = filterContainer.querySelector('.active');
-              if (currentActive) {
-                  currentActive.classList.remove('active', 'bg-[#a48374]', 'text-white');
-                  currentActive.classList.add('bg-gray-200', 'text-gray-700');
-              }
-              target.classList.add('active', 'bg-[#a48374]', 'text-white');
-              target.classList.remove('bg-gray-200', 'text-gray-700');
-    
-              const selectedTag = target.dataset.tag;
-    
-              postItems.forEach(item => {
-                const post = item as HTMLElement;
-                const postTags = post.dataset.tags ? post.dataset.tags.split(',') : [];
-                
-                if (selectedTag === 'all' || postTags.includes(String(selectedTag))) {
-                  post.style.display = 'block';
-                } else {
-                  post.style.display = 'none';
-                }
-              });
-            }
-          });
-        }
-  </script>
 </MainLayout>
-  
 <Footer />
