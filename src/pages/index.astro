@@ -38,7 +38,7 @@ const content = await sanityClient.fetch<SanityDocument>(QUERY);
 const imageProps = content ? generateImageProps(content.cover.asset, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
 ---
 <MainLayout title={content?.title}>
-  <main class="flex flex-col container font-Dongle mx-auto min-h-screen max-w-3xl p-4 md:p-8">
+  <main class="flex flex-col container mx-auto min-h-screen max-w-3xl px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
     {content ? (
       <>
           <h1 class="font-bold text-center text-4xl md:text-5xl mb-8 " style="font-family: 'Nanum Myeongjo', serif;">
