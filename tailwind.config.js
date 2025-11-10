@@ -16,7 +16,7 @@ export default {
         Monsieur: ['Monsieur La Doulaise', 'cursive'],
         Tangerine: ['Tangerine', 'cursive'],
         Birthstone: ['Birthstone', 'cursive'],
-        Nautigal: ['The Nautigal', 'cursive'],
+        The: ['The Nautigal', 'cursive'],
         Poiret: ['Poiret One', 'sans-serif'],
         Dongle: ['Dongle', 'sans-serif'],
         Nanum: ['Nanum Myeongjo', 'serif'],

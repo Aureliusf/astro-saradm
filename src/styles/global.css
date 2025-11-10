@@ -2,7 +2,6 @@
 
 html {
   background-color: #f1ede6;
-  font-family: sans-serif;
   height: 100%;
 }
 
@@ -32,4 +31,10 @@ html.dark {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
+}
+
+@layer base {
+  body {
+    font-family: 'Dongle', sans-serif;
+  }
 }
