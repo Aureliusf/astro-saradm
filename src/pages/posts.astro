@@ -78,8 +78,7 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
     </ul>
   </main>
 
-  <script >
-    document.addEventListener('DOMContentLoaded', () => {
+  <script>
         const filterContainer = document.getElementById('tag-filters');
         const postItems = document.querySelectorAll('.post-item');
     
@@ -111,7 +110,6 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
             }
           });
         }
-    });
   </script>
 </MainLayout>
   
