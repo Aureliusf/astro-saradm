@@ -11,15 +11,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        playfair: ['Playfair Display', 'serif'],
         Monsieur: ['Monsieur La Doulaise', 'cursive'],
-        Tangerine: ['Tangerine', 'cursive'],
-        Birthstone: ['Birthstone', 'cursive'],
-        The: ['The Nautigal', 'cursive'],
-        Poiret: ['Poiret One', 'sans-serif'],
-        Dongle: ['Dongle', 'sans-serif'],
-        Nanum: ['Nanum Myeongjo', 'serif'],
       },
 
       borderRadius: {
