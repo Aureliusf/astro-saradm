@@ -1,9 +1,8 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
+  const resend = new Resend(locals.runtime.env.RESEND_API_KEY);
   try {
     const data = await request.json();
     const { name, email, message } = data;
