@@ -40,36 +40,39 @@ const content = await sanityClient.fetch<SanityDocument>(QUERY);
 const imageProps = content ? generateImageProps(content.cover.asset, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
 ---
 <MainLayout title={content?.title}>
-  <main class="flex flex-col container mx-auto min-h-screen max-w-3xl px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
+  <main class="flex flex-col container mx-auto min-h-screen  px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
     {content ? (
       <>
           <h1 class="font-bold text-center text-4xl md:text-5xl mb-8 " style="font-family: 'Nanum Myeongjo', serif;">
             {content.title}
           </h1>
-          <h2 class="font-normal text-center text-2xl md:text-2xl mb-8 " style="font-family: 'Nanum Myeongjo', serif;">
+          <h2 class="font-normal text-center text-2xl md:text-2xl mb-8 ">
             {content.subtitle}
           </h2>
-        <div class="max-w-lg mx-auto">
-          {imageProps && <img
-            src={imageProps.src}
-            srcset={imageProps.srcset}
-            sizes={imageProps.sizes}
-            alt={content.title || ""} 
-            class="w-full aspect-auto object-cover rounded-lg overflow-hidden shadow-lg" 
-            loading="lazy"
-            decoding="async"
-          />}
-        </div>
 
-        <div class="mt-6 mb-3">
-          <div class="text-xl md:text-2xl text-center bg-[#f1ede6] text-[#a48374] rounded-lg p-4">
-            <p>
-              {content.shortDescription}
-            </p>
-          </div>
+          <div class="flex flex-col md:flex-row items-center md:items-center gap-4">
+            <div class="w-full md:w-1/2 max-w-lg mx-auto md:mx-0">
+              {imageProps && <img
+                src={imageProps.src}
+                srcset={imageProps.srcset}
+                sizes={imageProps.sizes}
+                alt={content.title || ""} 
+                class="w-full aspect-auto object-cover rounded-lg overflow-hidden shadow-lg" 
+                loading="lazy"
+                decoding="async"
+              />}
+            </div>
+
+            <div class="w-full md:w-1/2 mt-6 mb-3 md:mt-0 md:mb-0">
+              <div class="text-xl md:text-2xl md:ml-4 text-center bg-[#f1ede6] text-[#a48374] rounded-lg p-4">
+                <p>
+                  {content.shortDescription}
+                </p>
+              </div>
+            </div>
         </div>
         <div class="mt-6 mb-6">
-          <h2 class="text-3xl md:text-4xl group-hover:underline mt-4 md:mt-0 text-center" style="font-family: 'Nanum Myeongjo', serif;">Mis Proyectos</h2>
+          <h2 class="text-3xl md:text-4xl group-hover:underline mt-4 md:mt-0 text-center">Mis Proyectos</h2>
         </div>
 
         <ul class="flex flex-col gap-y-8"> 
@@ -80,7 +83,7 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
                 <a href={`/${post.slug.current}`} 
                   class={`flex flex-col md:flex-row items-center gap-2 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
                 >
-                  <div class="w-full md:w-1/2">
+                  <div class="w-full md:w-1/4 md:items-center">
                     <img
                       src={imageProps.src}
                       srcset={imageProps.srcset}
@@ -92,7 +95,7 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
                     />
                   </div>
                   <div class="w-full md:w-1/2">
-                    <h2 class="text-2xl md:text-2xl group-hover:underline mt-4 md:mt-0 text-center md:text-left">{post.title}</h2>
+                    <h2 class="text-2xl md:text-2xl group-hover:underline mt-4 md:mt-0 md:mr-1 md:ml-1 text-center md:text-left">{post.title}</h2>
                   </div>
                 </a>
               </li>
