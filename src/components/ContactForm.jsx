@@ -42,7 +42,7 @@ export default function ContactForm() {
 
   if (status === 'success') {
     return (
-      <p className="text-xl md:text-2xl text-center text-[#a48374]">
+      <p className="text-xl md:text-2xl text-center text-[#220d0c]">
         ¡Gracias por tu mensaje! Te responderé pronto.
       </p>
     );
@@ -52,7 +52,7 @@ export default function ContactForm() {
     <form className="text-xl md:text-2xl space-y-6" onSubmit={handleSubmit}>
       {/* Name Field */}
       <div>
-        <label htmlFor="name" className="text-xl md:text-2xl block font-medium mb-2 text-[#a48374]">
+        <label htmlFor="name" className="text-xl md:text-2xl block font-medium mb-2 text-[#220d0c]">
           Nombre
         </label>
         <input
@@ -68,7 +68,7 @@ export default function ContactForm() {
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="text-xl md:text-2xl block font-medium mb-2 text-[#a48374]">
+        <label htmlFor="email" className="text-xl md:text-2xl block font-medium mb-2 text-[#220d0c]">
           Email
         </label>
         <input
@@ -84,7 +84,7 @@ export default function ContactForm() {
 
       {/* Message Field */}
       <div>
-        <label htmlFor="message" className="text-xl md:text-2xl block font-medium mb-2 text-[#a48374]">
+        <label htmlFor="message" className="text-xl md:text-2xl block font-medium mb-2 text-[#220d0c]">
           Mensaje
         </label>
         <textarea
@@ -103,7 +103,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="btn-hover px-8 py-3 rounded-full font-medium transition-all duration-300 bg-[#a48374] text-[#f1ede6] disabled:opacity-50"
+          className="btn-hover px-8 py-3 rounded-full font-medium transition-all duration-300 bg-[#541409] text-[#f1ede6] disabled:opacity-50"
         >
           {status === 'loading' ? 'Enviando...' : 'Enviar'}
         </button>

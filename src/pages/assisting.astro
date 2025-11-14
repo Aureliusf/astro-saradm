@@ -37,10 +37,10 @@ const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
 ---
 <MainLayout title="Proyectos en los que he colaborado">
   <main class="container mx-auto min-h-screen px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
-    <h1 class="text-center text-4xl md:text-5xl font-bold mb-8">Proyectos en los que he colaborado</h1>
+    <h1 class=" text-[#541409] text-center text-4xl md:text-5xl font-bold mb-8">Proyectos en los que he colaborado</h1>
 
     <!-- Posts Gallery -->
-    <ul id="post-gallery" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <ul id="post-gallery" class=" md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3">
       {posts.map(post => {
         const imageProps = generateImageProps(post.cover.image, '(min-width: 768px) 352px, calc(100vw - 2rem)');
         return (

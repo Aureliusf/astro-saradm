@@ -1,15 +1,15 @@
 ---
-// No props needed for this static footer
+import Button from './Button.astro';
 ---
-<footer class="bg-[#a48374] text-[#f1ede6] py-8 mt-8">
+<footer class="bg-[#220d0c] text-[#d6c8bd] py-8 mt-5">
   <div class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center px-4 md:px-8 gap-4">
     <!-- Navigation Links -->
     <nav>
-      <ul class="flex gap-4 text-xl md:text-xl">
+      <ul class="flex gap-4 text-xl md:text-xl items-center">
         <li><a href="/" class="hover:underline">Inicio</a></li>
         <li><a href="/posts" class="hover:underline">Proyectos</a></li>
         <li><a href="/assisting" class="hover:underline">Asistente</a></li>
-        <li><a href="/contact" class="hover:underline">Contacto</a></li>
+        <li><Button href="/contact">Contáctame</Button></li>
       </ul>
     </nav>
 
