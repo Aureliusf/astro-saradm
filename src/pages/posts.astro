@@ -25,7 +25,9 @@ function generateImageProps(image: any, sizes: string) {
   };
 }
 
-const POSTS_QUERY = `*[_type == "post" && !('Asistente' in tags[]->name)]{
+const POSTS_QUERY = `*[_type == "post" && !('Asistente' in tags[]->name)] | 
+order(publishedAt desc) |
+{
   _id,
   title,
   slug,
