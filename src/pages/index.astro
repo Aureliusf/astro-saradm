@@ -3,6 +3,7 @@ export const prerender = true;
 
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
+import { PortableText } from "astro-portabletext";
 import imageUrlBuilder from '@sanity/image-url';
 
 import MainLayout from '../layouts/main.astro';
@@ -66,7 +67,7 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
             <div class="w-full md:w-1/2 mt-6 mb-3 md:mt-0 md:mb-0">
               <div class="text-xl md:text-2xl md:ml-4 text-center text-[#220d0c] rounded-lg p-4">
                 <p>
-                  {content.shortDescription}
+                {Array.isArray(content.shortDescription) && <PortableText value={content.shortDescription} />}
                 </p>
               </div>
             </div>
