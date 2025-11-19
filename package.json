@@ -1,7 +1,7 @@
 {
   "name": "saradm-website",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -13,11 +13,13 @@
     "@astrojs/mdx": "^4.3.10",
     "@astrojs/react": "^4.4.2",
     "@sanity/astro": "^3.2.10",
-    "@sanity/client": "^7.12.1",
+    "@sanity/client": "^7.13.0",
+    "@sanity/image-url": "^1.2.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/canvas-confetti": "^1.9.0",
     "astro": "^5.15.4",
     "astro-font": "^1.1.0",
+    "astro-masonry": "^1.2.2",
     "astro-portabletext": "^0.11.3",
     "canvas-confetti": "^1.9.3",
     "create-cloudflare": "^2.54.3",
@@ -25,7 +27,7 @@
     "react-dom": "^19.2.0",
     "react-is": "^19.2.0",
     "resend": "^6.4.2",
-    "sanity": "^4.14.1",
+    "sanity": "^4.16.0",
     "styled-components": "^6.1.19",
     "tailwindcss": "^4.1.17"
   }
