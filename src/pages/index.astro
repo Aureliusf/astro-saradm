@@ -33,7 +33,8 @@ const QUERY = `*[_type == "home"][0] {
     title,
     subtitle,
     slug,
-    cover
+    cover,
+    body
   }
 }`;
 
@@ -84,7 +85,7 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
                 <a href={`/${post.slug.current}`} 
                   class={`flex flex-col md:flex-row items-center gap-2 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
                 >
-                  <div class="w-full md:w-1/3">
+                  <div class="w-full md:w-1/2">
                     <img
                       src={imageProps.src}
                       srcset={imageProps.srcset}
@@ -104,6 +105,9 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
                     ]}
                   >
                     <h2 class="text-[#220d0c] text-2xl md:text-2xl group-hover:underline mt-4 md:mt-0 md:mr-1 md:ml-1">{post.title}</h2>
+                    <div class=" text-center mt-2">
+                      {Array.isArray(post.body) && <PortableText value={post.body} />}
+                    </div>
                   </div>
                 </a>
               </li>

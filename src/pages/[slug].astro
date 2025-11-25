@@ -44,7 +44,7 @@ function generateImageProps(image: SanityImageSource) {
     srcset: [400, 800, 1200]
       .map(w => `${base.width(w).url()} ${w}w`)
       .join(', '),
-    sizes: '(min-width: 640px) 50vw, 100vw',
+    sizes: '(min-width: 768px) 33vw, 50vw',
   };
 }
 
@@ -70,7 +70,8 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
     </div>
     {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
       <div class="py-8">
-        <Masonry breakAt={{ 640: 2 }} gap={4}>
+        <Masonry breakAt={{ 0: 2, 768: 3 }} gap={4}> // Masonry broken :(
+
           {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
             if (!imageWithAlt.image) return null;
             const imageProps = generateImageProps(imageWithAlt.image);
@@ -78,7 +79,6 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
               <img
                 src={imageProps.src}
                 srcset={imageProps.srcset}
-                sizes={imageProps.sizes}
                 alt={imageWithAlt.alt || ""}
                 class="w-full h-auto"
                 loading="lazy"
