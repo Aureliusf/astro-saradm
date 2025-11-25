@@ -35,7 +35,7 @@ const QUERY = `*[_type == "home"][0] {
 }`;
 
 const content = await sanityClient.fetch<SanityDocument>(QUERY);
-const imageProps = content ? generateImageProps(content.cover.asset, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
+const imageProps = content && content.cover && content.cover.image ? generateImageProps(content.cover.image, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
 import ContactForm from '../components/ContactForm.jsx';
 ---
 <MainLayout title="Contacto">

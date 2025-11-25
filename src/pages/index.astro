@@ -8,6 +8,7 @@ import imageUrlBuilder from '@sanity/image-url';
 
 import MainLayout from '../layouts/main.astro';
 import Footer from '../components/Footer.astro';
+import { Masonry } from 'astro-masonry';
 
 
 const builder = imageUrlBuilder(sanityClient);
@@ -29,23 +30,25 @@ function generateImageProps(image: any, sizes: string) {
 
 const QUERY = `*[_type == "home"][0] {
   ...,
+  studiesAndCertificates,
+  hardSkills,
+  brandsWorkedWith[]{ nombre, logo{ image, alt } },
   topProjects[]->{
     title,
-    subtitle,
     slug,
     cover,
-    highlights,
-    body
+    highlights
   }
 }`;
 
 const content = await sanityClient.fetch<SanityDocument>(QUERY);
-const imageProps = content ? generateImageProps(content.cover.asset, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
+const imageProps = content && content.cover && content.cover.image ? generateImageProps(content.cover.image, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
 ---
 <MainLayout title={content?.title}>
   <main class="flex flex-col container mx-auto min-h-screen  px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
     {content ? (
       <>
+      <!-- About me Section -->
           <h1 class=" text-[#541409] font-bold text-center text-4xl md:text-5xl mb-8 " style="font-family: 'Nanum Myeongjo', serif;">
             {content.title}
           </h1>
@@ -74,6 +77,67 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
               </div>
             </div>
         </div>
+      <!-- Qualifications Section -->
+      <div class="mt-12 mb-12">
+        <h2 class="text-3xl md:text-4xl text-center text-[#541409] font-bold mb-8">Mis Cualificaciones</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Column 1: Studies and Certificates -->
+          <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
+            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Estudios y Certificaciones</h3>
+            <div class="text-xl md:text-2xl text-[#220d0c]">
+              {Array.isArray(content.studiesAndCertificates) && <PortableText value={content.studiesAndCertificates} />}
+            </div>
+          </div>
+
+          <!-- Column 2: Hard Skills -->
+          <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
+            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Habilidades Técnicas</h3>
+            <div class="text-xl md:text-2xl text-[#220d0c]">
+              {Array.isArray(content.hardSkills) && <PortableText value={content.hardSkills} />}
+            </div>
+          </div>
+
+          <!-- Column 3: Brands Worked With -->
+          <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
+            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">He Colaborado con</h3>
+            <div class="text-xl md:text-2xl text-[#220d0c]">
+              {content.brandsWorkedWith && content.brandsWorkedWith.length > 0 && (
+                <Masonry breakAt={{ 0: 2, 640: 3 }} gap={8}> {/* 2 cols mobile, 3 cols desktop for brands */}
+                  {content.brandsWorkedWith.map((brand: { nombre: string; logo: { image: any; alt: string } }) => {
+                    const hasLogo = brand.logo && brand.logo.image; // Check if logo image is available
+
+                    return (
+                      <div class="flex flex-col items-center justify-center p-2">
+                        {hasLogo ? ( // If logo is available, render the image
+                          <>
+                            {(() => { // Using an IIFE to generate props inside JSX
+                              const brandLogoProps = generateImageProps(brand.logo.image, '60px');
+                              return (
+                                <img
+                                  src={brandLogoProps.src}
+                                  srcset={brandLogoProps.srcset}
+                                  sizes="60px"
+                                  alt={brand.logo.alt || brand.nombre || ""}
+                                  class="h-12 w-auto object-contain mb-1"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              );
+                            })()}
+                          </>
+                        ) : ( // If no logo, just display the name, perhaps with some padding
+                          <span class="text-lg text-center p-4">{brand.nombre}</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </Masonry>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Top Projects Section -->
         <div class="mx-auto w-full md:w-1/3 md:mt-40 md:mb-10 mt-6 mb-6">
           <h2 class="text-3xl md:text-4xl mt-3 mb-2 md:mt-0 text-center text-[#541409] font-bold">Proyectos Destacados</h2>
         </div>
