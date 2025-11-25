@@ -20,7 +20,7 @@ function generateImageProps(image: any, sizes: string) {
   const base = urlFor(image).quality(90).auto('format');
   return {
     src: base.width(800).url(),
-    srcset: [400, 800, 1200, 1600, 2000]
+    srcset: [800, 1200, 1600, 2000]
       .map(w => `${base.width(w).url()} ${w}w`)
       .join(', '),
     sizes: sizes,
@@ -34,6 +34,7 @@ const QUERY = `*[_type == "home"][0] {
     subtitle,
     slug,
     cover,
+    highlights,
     body
   }
 }`;
@@ -106,7 +107,7 @@ const imageProps = content ? generateImageProps(content.cover.asset, '(min-width
                   >
                     <h2 class="text-[#220d0c] text-2xl md:text-2xl group-hover:underline mt-4 md:mt-0 md:mr-1 md:ml-1">{post.title}</h2>
                     <div class=" text-center mt-2">
-                      {Array.isArray(post.body) && <PortableText value={post.body} />}
+                      {Array.isArray(post.highlights) && <PortableText value={post.highlights} />}
                     </div>
                   </div>
                 </a>
