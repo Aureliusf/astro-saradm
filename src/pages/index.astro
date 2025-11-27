@@ -31,6 +31,7 @@ function generateImageProps(image: any, sizes: string) {
 const QUERY = `*[_type == "home"][0] {
   ...,
   studiesAndCertificates,
+  services,
   hardSkills,
   brandsWorkedWith[]{ nombre, logo{ image, alt } },
   topProjects[]->{
@@ -70,9 +71,15 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
             </div>
 
             <div class="w-full md:w-1/2 mt-6 mb-3 md:mt-0 md:mb-0">
-              <div class="text-xl md:text-2xl md:ml-4 text-center text-[#220d0c] rounded-lg p-4">
+              <div class="text-xl md:text-2xl md:ml-4 text-center text-[#220d0c] rounded-lg p-4 ">
                 <p>
                 {Array.isArray(content.shortDescription) && <PortableText value={content.shortDescription} />}
+                </p>
+              </div>
+              <div class="text-xl md:textl md:ml-4 text-center text-[#220d0c] rounded-lg p-4 shadow-2xl  ">
+              <h2 class="text-[#541409] opacity-80 text-center text-2xl md:text-2xl mb-3">Servicios Disponibles</h2>
+                <p>
+                {Array.isArray(content.services) && <PortableText value={content.services} />}
                 </p>
               </div>
             </div>
