@@ -90,10 +90,14 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
       </div>
     )}
         
-            <h2 class="text-center text-2xl md:text-3xl font-bold text-[#541409] ">{creditsSection}</h2>
-    <div class="text-base md:text-xl text-[#220d0c]">
-      {Array.isArray(post.credits) && <PortableText value={post.credits} />}
-    </div>
+    {post.credits && post.credits.length > 0 && (
+      <>
+        <h2 class="text-center text-2xl md:text-3xl font-bold text-[#541409] ">{creditsSection}</h2>
+        <div class="text-base md:text-xl text-[#220d0c]">
+          <PortableText value={post.credits} />
+        </div>
+      </>
+    )}
     <a href={backLinkUrl} class=" text-[#220d0c] text-2xl md:text-base text-right hover:underline">&larr;{backLinkText}</a>
   </main>
 </MainLayout>
