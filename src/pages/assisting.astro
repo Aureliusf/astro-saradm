@@ -42,6 +42,7 @@ const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
     <!-- Posts Gallery -->
     <ul id="post-gallery" class=" md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3">
       {posts.map(post => {
+        if (!post.cover || !post.cover.image) return null;
         const imageProps = generateImageProps(post.cover.image, '(min-width: 768px) 352px, calc(100vw - 2rem)');
         return (
           <li class="post-item group relative overflow-hidden rounded-lg shadow-lg" data-tags={(post.tags || []).join(',')}>
