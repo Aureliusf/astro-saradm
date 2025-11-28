@@ -9,7 +9,13 @@ import imageUrlBuilder from '@sanity/image-url';
 import MainLayout from '../layouts/main.astro';
 import Footer from '../components/Footer.astro';
 import { Masonry } from 'astro-masonry';
+import BulletList from '../components/portabletext/BulletList.astro';
 
+const portableTextComponents = {
+  list: {
+    bullet: BulletList,
+  },
+};
 
 const builder = imageUrlBuilder(sanityClient);
 
@@ -76,11 +82,15 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
                 {Array.isArray(content.shortDescription) && <PortableText value={content.shortDescription} />}
                 </p>
               </div>
-              <div class="text-xl md:textl md:ml-4 text-center text-[#220d0c] rounded-lg p-4 shadow-2xl  ">
+              <div class="text-xl md:textl md:ml-4 text-left text-[#220d0c] rounded-lg p-4 shadow-2xl">
               <h2 class="text-[#541409] opacity-80 text-center text-2xl md:text-2xl mb-3">Servicios Disponibles</h2>
-                <p>
-                {Array.isArray(content.services) && <PortableText value={content.services} />}
-                </p>
+                <div class="grid grid-cols-5">
+                  <div class="col-span-1"></div>
+                  <div class="col-span-3">
+                    {Array.isArray(content.services) && <PortableText value={content.services} components={portableTextComponents} />}
+                  </div>
+                  <div class="col-span-1"></div>
+                </div>
               </div>
             </div>
         </div>
@@ -91,7 +101,7 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
           <!-- Column 1: Studies and Certificates -->
           <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
             <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Estudios y Certificaciones</h3>
-            <div class="text-xl md:text-2xl text-[#220d0c]">
+            <div class="text-xl md:text-xl text-[#220d0c]">
               {Array.isArray(content.studiesAndCertificates) && <PortableText value={content.studiesAndCertificates} />}
             </div>
           </div>
@@ -99,8 +109,8 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
           <!-- Column 2: Hard Skills -->
           <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
             <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Habilidades Técnicas</h3>
-            <div class="text-xl md:text-2xl text-[#220d0c]">
-              {Array.isArray(content.hardSkills) && <PortableText value={content.hardSkills} />}
+            <div class="prose prose-xl text-left">
+              {Array.isArray(content.hardSkills) && <PortableText value={content.hardSkills} components={portableTextComponents} />}
             </div>
           </div>
 
@@ -144,8 +154,9 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
           </div>
         </div>
       </div>
+
       <!-- Top Projects Section -->
-        <div class="mx-auto w-full md:w-1/3 md:mt-40 md:mb-10 mt-6 mb-6">
+        <div class="mx-auto w-full md:w-1/3 md:mt-10 md:mb-10 mt-6 mb-6">
           <h2 class="text-3xl md:text-4xl mt-3 mb-2 md:mt-0 text-center text-[#541409] font-bold">Proyectos Destacados</h2>
         </div>
 
