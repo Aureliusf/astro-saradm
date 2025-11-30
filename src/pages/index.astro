@@ -56,7 +56,7 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
     {content ? (
       <>
       <!-- About me Section -->
-          <h1 class=" text-[#541409] font-bold text-center text-4xl md:text-5xl mb-8 " style="font-family: 'Nanum Myeongjo', serif;">
+          <h1 style="font-family: 'Nanum Myeongjo', serif;">
             {content.title}
           </h1>
           <h2 class="text-[#541409] opacity-60 text-center text-2xl md:text-2xl mb-8 ">
@@ -100,7 +100,7 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Column 1: Studies and Certificates -->
           <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
-            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Estudios y Certificaciones</h3>
+            <h3>Estudios y Certificaciones</h3>
             <div class="text-xl md:text-xl text-[#220d0c]">
               {Array.isArray(content.studiesAndCertificates) && <PortableText value={content.studiesAndCertificates} />}
             </div>
@@ -108,7 +108,7 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
 
           <!-- Column 2: Hard Skills -->
           <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
-            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">Habilidades Técnicas</h3>
+            <h3>Habilidades Técnicas</h3>
             <div class="prose prose-xl text-left">
               {Array.isArray(content.hardSkills) && <PortableText value={content.hardSkills} components={portableTextComponents} />}
             </div>
@@ -116,7 +116,7 @@ const imageProps = content && content.cover && content.cover.image ? generateIma
 
           <!-- Column 3: Brands Worked With -->
           <div class="flex flex-col items-center text-center p-4 shadow-lg rounded-lg">
-            <h3 class="text-2xl md:text-3xl font-bold text-[#220d0c] mb-4">He Colaborado con</h3>
+            <h3>He Colaborado con</h3>
             <div class="text-xl md:text-2xl text-[#220d0c]">
               {content.brandsWorkedWith && content.brandsWorkedWith.length > 0 && (
                 <Masonry breakAt={{ 0: 2, 640: 3 }} gap={8}> {/* 2 cols mobile, 3 cols desktop for brands */}
