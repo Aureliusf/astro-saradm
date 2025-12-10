@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+:root {
+  --font-normal: "Montserrat", sans-serif;
+  --font-title: "Bodoni Moda", serif;
+}
+
 html {
   background-color: #ffffff;
   height: 100%;
@@ -14,27 +19,32 @@ html.dark {
   color: #EBDBB2;
 }
 
-/* body {
-  margin: 0 auto;
-  width: 100vw;
-  padding: 2rem 2rem 2rem 2rem;
-  line-height: 1.5;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-} */
-
 * {
   box-sizing: border-box;
 }
 
 @layer base {
   body {
+    font-family: var(--font-normal);
   }
   h1 {
+    font-family: var(--font-title);
     @apply text-[#541409] text-center text-4xl md:text-5xl font-bold mb-8;
   }
+  h2 {
+    font-family: var(--font-title);
+  }
   h3 {
+    font-family: var(--font-title);
     @apply text-2xl md:text-3xl font-bold text-[#220d0c] mb-4;
   }
+}
+
+/* Utility classes */
+.normal-font {
+  font-family: var(--font-normal);
+}
+
+.title-font {
+  font-family: var(--font-title);
 }
