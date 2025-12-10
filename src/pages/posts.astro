@@ -46,7 +46,7 @@ const allTags = [...new Set(posts.flatMap(post => post.tags || []))];
     <h1>Todos mis Proyectos</h1>
 
     <!-- Tag Filters -->
-    <div id="tag-filters" class="text-xl md:text-2xl flex justify-center flex-wrap gap-2 mb-8">
+    <div id="tag-filters" class=" title-font text-xl md:text-2xl flex justify-center flex-wrap gap-2 mb-8">
       <button class="tag-button active bg-[#541409] text-white rounded-lg px-4 py-2" data-tag="all">Todos</button>
       {allTags.map(tag => (
         <button class="tag-button bg-gray-200 text-gray-700 rounded-lg px-4 py-2" data-tag={tag}>{tag}</button>
