@@ -4,17 +4,17 @@ import Button from './Button.astro';
 <header class="bg-[#220d0c] text-[#d6c8bd] py-1">
   <div class="container mx-auto flex items-center px-2 md:px-2">
     <!-- "Sara Delgado" text - hidden on mobile, block on desktop -->
-    <div class="hidden md:block text-2xl font-bold">
+    <div class="hidden md:block text-2xl main-title-font">
       <a href="/" class="hover:underline">Sara Delgado</a>
     </div>
 
     <!-- Navigation Links -->
     <nav class="grow">
-      <ul class="flex justify-center gap-4 md:gap-12 md:text-xl items-center">
+      <ul class="title-font text-xl md:text-xl flex justify-center gap-4 md:gap-12 items-center">
         <li><a href="/" class="hover:underline">Inicio</a></li>
         <li><a href="/posts" class="hover:underline">Proyectos</a></li>
         <li><a href="/assisting" class="hover:underline">Asistente</a></li>
-        <li><Button href="/contact">Contáctame</Button></li>
+        <li class="main-title-font"><Button href="/contact">Contáctame</Button></li>
       </ul>
     </nav>
 

@@ -60,10 +60,10 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
 
 <MainLayout title={post.title}>
   <main class="container mx-auto min-h-screen px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8 flex flex-col gap-4 bg-white">
-    <a href={backLinkUrl} class=" text-[#220d0c] text-xl md:text-base text-left hover:underline">&larr;{backLinkText}</a>
+    <a href={backLinkUrl} class="title-font text-[#220d0c] md:text-xl  text-left hover:underline">&larr;{backLinkText}</a>
     <h1>{post.title}</h1>
     <div class="text-center text-2xl md:text-3xl gap-1">
-      <p class="text-[#541409] opacity-60">{new Date(post.publishedAt).getFullYear()}</p>
+      <p class="title-font text-[#541409] opacity-60">{new Date(post.publishedAt).getFullYear()}</p>
     </div>
     <div class="text-center text-xl md:text-2xl text-[#220d0c]">
       {Array.isArray(post.body) && <PortableText value={post.body} />}
@@ -92,13 +92,13 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
         
     {post.credits && post.credits.length > 0 && (
       <>
-        <h2 class="text-center text-2xl md:text-3xl font-bold text-[#541409] ">{creditsSection}</h2>
+        <h2 class="main-title-font text-center text-2xl md:text-3xl font-bold text-[#541409] ">{creditsSection}</h2>
         <div class="text-base md:text-xl text-[#220d0c]">
           <PortableText value={post.credits} />
         </div>
       </>
     )}
-    <a href={backLinkUrl} class=" text-[#220d0c] text-2xl md:text-base text-right hover:underline">&larr;{backLinkText}</a>
+    <a href={backLinkUrl} class="title-font text-[#220d0c] md:text-xl  text-right hover:underline">&larr;{backLinkText}</a>
   </main>
 </MainLayout>
 <Footer />

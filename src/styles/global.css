@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 
 :root {
-  --font-normal: "Montserrat", sans-serif;
-  --font-title: "Bodoni Moda", serif;
+  --font-normal: "Lato", sans-serif;
+  --font-title: "Cormorant Garamond", serif;
+  --font-main-title: "Bodoni Moda", serif;
 }
 
 html {
@@ -28,7 +29,7 @@ html.dark {
     font-family: var(--font-normal);
   }
   h1 {
-    font-family: var(--font-title);
+    font-family: var(--font-main-title);
     @apply text-[#541409] text-center text-4xl md:text-5xl font-bold mb-8;
   }
   h2 {
@@ -43,6 +44,10 @@ html.dark {
 /* Utility classes */
 .normal-font {
   font-family: var(--font-normal);
+}
+
+.main-title-font {
+  font-family: var(--font-main-title);
 }
 
 .title-font {
