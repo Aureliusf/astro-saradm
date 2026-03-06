@@ -4,17 +4,19 @@ export const prerender = true;
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
 import imageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { PortableText } from "astro-portabletext";
 
 import MainLayout from '../layouts/main.astro';
 import Footer from '../components/Footer.astro';
 
 const builder = imageUrlBuilder(sanityClient);
 
-function urlFor(source: any) {
+function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
-function generateImageProps(image: any, sizes: string) {
+function generateImageProps(image: SanityImageSource, sizes: string) {
   const base = urlFor(image).quality(90).auto('format');
   return {
     src: base.width(800).url(),
@@ -24,18 +26,16 @@ function generateImageProps(image: any, sizes: string) {
     sizes: sizes,
   };
 }
-const QUERY = `*[_type == "home"][0] {
-  ...,
-  topProjects[]->{
-    title,
-    subtitle,
-    slug,
-    cover
-  }
+
+const QUERY = `*[_type == "contact"][0] {
+  title,
+  picture,
+  bottomCopy
 }`;
 
 const content = await sanityClient.fetch<SanityDocument>(QUERY);
-const imageProps = content && content.cover && content.cover.image ? generateImageProps(content.cover.image, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
+const imageProps = content && content.picture && content.picture.image ? generateImageProps(content.picture.image, '(min-width: 512px) 512px, calc(100vw - 2rem)') : null;
+
 import ContactForm from '../components/ContactForm.jsx';
 ---
 <MainLayout title="Contacto">
@@ -49,7 +49,7 @@ import ContactForm from '../components/ContactForm.jsx';
           src={imageProps.src}
           srcset={imageProps.srcset}
           sizes={imageProps.sizes}
-          alt={content.title || ""} 
+          alt={content.picture?.alt || ""} 
           class="w-full aspect-auto object-cover overflow-hidden shadow-lg" 
           loading="lazy"
           decoding="async"
@@ -61,6 +61,13 @@ import ContactForm from '../components/ContactForm.jsx';
         <ContactForm client:load />
       </div>
     </div>
+
+    <!-- Optional Bottom Copy -->
+    {Array.isArray(content?.bottomCopy) && content.bottomCopy.length > 0 && (
+      <div class="text-center text-xl md:text-2xl text-[#220d0c] mt-8 w-full max-w-3xl">
+        <PortableText value={content.bottomCopy} />
+      </div>
+    )}
 
   </main>
 </MainLayout>
