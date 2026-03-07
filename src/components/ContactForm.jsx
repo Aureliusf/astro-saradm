@@ -116,7 +116,7 @@ export default function ContactForm() {
           className="mt-1.5 w-5 h-5 rounded border-2 border-gray-400 bg-[#f1ede6] text-[#541409] focus:ring-[#541409] transition-all duration-300"
         />
         <label htmlFor="privacyConsent" className="text-lg md:text-xl text-[#220d0c] leading-relaxed">
-          Acepto la política de privacidad y el tratamiento de mis datos personales.
+          Acepto la <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#541409] underline hover:text-[#220d0c] transition-colors">política de privacidad</a> y el tratamiento de mis datos personales.
         </label>
       </div>
 
