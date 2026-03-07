@@ -55,7 +55,7 @@ const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
                   srcset={imageProps.srcset}
                   sizes={imageProps.sizes}
                   alt={post.cover.alt || post.title || ""}
-                  class="w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105 group-hover:blur-xs"
+                  class="grayscale group-hover:grayscale-0 w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105 group-hover:blur-xs"
                   loading="lazy"
                   decoding="async"
                 />
