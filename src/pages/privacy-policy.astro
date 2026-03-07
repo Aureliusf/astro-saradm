@@ -1,0 +1,135 @@
+---
+export const prerender = true;
+
+import MainLayout from '../layouts/main.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<MainLayout title="Política de Privacidad">
+  <main class="container mx-auto min-h-screen px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
+    <h1>Política de Privacidad</h1>
+
+    <div class="max-w-3xl mx-auto space-y-8 text-[#220d0c]">
+      
+      <!-- Data Controller -->
+      <section>
+        <h3>Identidad del Responsable del Tratamiento</h3>
+        <p class="text-xl md:text-2xl">
+          <strong>Responsable:</strong> Sara Delgado Morales<br>
+          <strong>Correo electrónico:</strong> hello@saradm.com<br>
+          <strong>Finalidad del sitio web:</strong> Portfolio profesional y servicios de styling
+        </p>
+      </section>
+
+      <!-- Data Collected -->
+      <section>
+        <h3>Datos Personales que Recopilamos</h3>
+        <p class="text-xl md:text-2xl">
+          A través del formulario de contacto, recopilamos los siguientes datos personales:
+        </p>
+        <ul class="text-xl md:text-2xl list-disc pl-8 mt-4 space-y-2">
+          <li><strong>Nombre:</strong> Para identificar al remitente del mensaje</li>
+          <li><strong>Correo electrónico:</strong> Para responder a la consulta</li>
+          <li><strong>Mensaje:</strong> El contenido de la consulta o solicitud</li>
+        </ul>
+      </section>
+
+      <!-- Purpose -->
+      <section>
+        <h3>Finalidad del Tratamiento</h3>
+        <p class="text-xl md:text-2xl">
+          Los datos personales proporcionados se utilizan únicamente para:
+        </p>
+        <ul class="text-xl md:text-2xl list-disc pl-8 mt-4 space-y-2">
+          <li>Gestionar y responder a consultas realizadas a través del formulario de contacto</li>
+          <li>Mantener comunicación relacionada con servicios profesionales solicitados</li>
+          <li>Enviar respuestas a solicitudes de información</li>
+        </ul>
+      </section>
+
+      <!-- Legal Basis -->
+      <section>
+        <h3>Base Legal para el Tratamiento</h3>
+        <p class="text-xl md:text-2xl">
+          La base legal para el tratamiento de sus datos personales es el <strong>consentimiento</strong> 
+          expreso que usted otorga al marcar la casilla de aceptación de esta política de privacidad 
+          antes de enviar el formulario de contacto.
+        </p>
+      </section>
+
+      <!-- Retention Period -->
+      <section>
+        <h3>Plazo de Conservación de los Datos</h3>
+        <p class="text-xl md:text-2xl">
+          Sus datos personales se conservarán durante el tiempo necesario para cumplir con la finalidad 
+          para la que fueron recopilados. Una vez resuelta su consulta, los datos se conservarán 
+          <strong>durante un máximo de 1 año</strong>, salvo que se requiera su conservación por obligación legal 
+          o para la resolución de posibles responsabilidades derivadas del tratamiento.
+        </p>
+      </section>
+
+      <!-- Third Parties -->
+      <section>
+        <h3>Cesión de Datos a Terceros</h3>
+        <p class="text-xl md:text-2xl">
+          Para el envío de correos electrónicos, utilizamos <strong>Resend</strong> como proveedor de 
+          servicios de envío de emails. Los datos (nombre, email y mensaje) se transmiten a través de 
+          sus servidores seguros para la entrega del correo. Resend cumple con el Reglamento General 
+          de Protección de Datos (RGPD) y actúa como encargado del tratamiento bajo un acuerdo de 
+          tratamiento de datos adecuado.
+        </p>
+        <p class="text-xl md:text-2xl mt-4">
+          No se cederán datos a otros terceros, salvo obligación legal expresa.
+        </p>
+      </section>
+
+      <!-- User Rights -->
+      <section>
+        <h3>Derechos del Usuario</h3>
+        <p class="text-xl md:text-2xl">
+          De acuerdo con la normativa de protección de datos, usted tiene derecho a:
+        </p>
+        <ul class="text-xl md:text-2xl list-disc pl-8 mt-4 space-y-2">
+          <li><strong>Acceso:</strong> Conocer qué datos personales suyos están siendo tratados</li>
+          <li><strong>Rectificación:</strong> Solicitar la corrección de datos inexactos</li>
+          <li><strong>Supresión:</strong> Solicitar la eliminación de sus datos (derecho al olvido)</li>
+          <li><strong>Portabilidad:</strong> Recibir sus datos en un formato estructurado y transmitirlos a otro responsable</li>
+          <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos en determinadas circunstancias</li>
+          <li><strong>Limitación del tratamiento:</strong> Solicitar la restricción del tratamiento de sus datos</li>
+        </ul>
+      </section>
+
+      <!-- Contact for Data Requests -->
+      <section>
+        <h3>Ejercicio de Derechos</h3>
+        <p class="text-xl md:text-2xl">
+          Para ejercer cualquiera de estos derechos, puede enviar una solicitud por escrito a:
+        </p>
+        <p class="text-xl md:text-2xl mt-4">
+          <strong>Correo electrónico:</strong> hello@saradm.com<br>
+          <strong>Asunto:</strong> Ejercicio de derechos RGPD
+        </p>
+        <p class="text-xl md:text-2xl mt-4">
+          La solicitud deberá incluir su nombre completo, dirección de correo electrónico utilizada 
+          en el formulario y una copia de su documento de identidad para verificar su identidad. 
+          Le responderemos en un plazo máximo de <strong>1 mes</strong> desde la recepción de su solicitud.
+        </p>
+      </section>
+
+      <!-- Updates -->
+      <section>
+        <h3>Modificaciones de la Política</h3>
+        <p class="text-xl md:text-2xl">
+          Nos reservamos el derecho de modificar esta política de privacidad para adaptarla a 
+          novedades legislativas o cambios en nuestros servicios. La versión actualizada estará 
+          siempre disponible en esta página con la fecha de última actualización.
+        </p>
+        <p class="text-xl md:text-2xl mt-4 italic">
+          Última actualización: 6 de marzo de 2026
+        </p>
+      </section>
+
+    </div>
+  </main>
+</MainLayout>
+<Footer />

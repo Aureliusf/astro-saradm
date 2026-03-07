@@ -5,16 +5,23 @@ export default function ContactForm() {
     name: '',
     email: '',
     message: '',
+    privacyConsent: false,
   });
   const [status, setStatus] = useState(''); // '', 'loading', 'success', 'error'
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.privacyConsent) {
+      alert('Debes aceptar la política de privacidad para continuar.');
+      return;
+    }
+    
     setStatus('loading');
 
     try {
@@ -28,7 +35,7 @@ export default function ContactForm() {
 
       if (response.ok) {
         setStatus('success');
-        setFormData({ name: '', email: '', message: '' }); // Clear form
+        setFormData({ name: '', email: '', message: '', privacyConsent: false }); // Clear form
       } else {
         const errorData = await response.json();
         console.error('Submission error:', errorData);
@@ -96,6 +103,21 @@ export default function ContactForm() {
           required
           className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 bg-[#f1ede6] text-black transition-all duration-300 resize-none"
         ></textarea>
+      </div>
+
+      {/* Privacy Consent Checkbox */}
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          id="privacyConsent"
+          name="privacyConsent"
+          checked={formData.privacyConsent}
+          onChange={handleChange}
+          className="mt-1.5 w-5 h-5 rounded border-2 border-gray-400 bg-[#f1ede6] text-[#541409] focus:ring-[#541409] transition-all duration-300"
+        />
+        <label htmlFor="privacyConsent" className="text-lg md:text-xl text-[#220d0c] leading-relaxed">
+          Acepto la política de privacidad y el tratamiento de mis datos personales.
+        </label>
       </div>
 
       {/* Submit Button */}
