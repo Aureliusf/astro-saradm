@@ -9,15 +9,15 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.5",
-    "@astrojs/mdx": "^4.3.10",
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/cloudflare": "^13.5.0",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/react": "^5.0.4",
     "@sanity/astro": "^3.2.10",
     "@sanity/client": "^7.13.0",
     "@sanity/image-url": "^1.2.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/canvas-confetti": "^1.9.0",
-    "astro": "^5.15.4",
+    "astro": "^6.3.1",
     "astro-font": "^1.1.0",
     "astro-masonry": "^1.2.2",
     "astro-portabletext": "^0.11.3",
@@ -38,6 +38,6 @@
   "overrides": {
     "prismjs": ">=1.30.0",
     "undici": ">=7.18.2",
-    "wrangler": ">=4.71.0"
+    "wrangler": ">=4.90.0"
   }
 }
