@@ -1,12 +1,12 @@
 // Validation constants shared between client and server
-export const VALIDATION_LIMITS = {
+const VALIDATION_LIMITS = {
   name: { min: 1, max: 100 },
   email: { min: 5, max: 254 },
   message: { min: 1, max: 5000, maxNewlines: 50 }
 } as const;
 
 // RFC 5322 simplified email regex
-export const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 export interface ValidationError {
   field: string;
