@@ -9,7 +9,7 @@ export default function ContactForm() {
   });
   const [status, setStatus] = useState(''); // '', 'loading', 'success', 'error'
 
-  const handleChange = (e) => {
+  const updateFormField = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
@@ -67,9 +67,9 @@ export default function ContactForm() {
           id="name"
           name="name"
           value={formData.name}
-          onChange={handleChange}
+          onChange={updateFormField}
           required
-          className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 bg-[#f1ede6] text-black transition-all duration-300"
+          className="w-full px-4 py-3 rounded-lg border-2 border-zinc-400 bg-[#f1ede6] text-black transition-all duration-300"
         />
       </div>
 
@@ -83,9 +83,9 @@ export default function ContactForm() {
           id="email"
           name="email"
           value={formData.email}
-          onChange={handleChange}
+          onChange={updateFormField}
           required
-          className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 bg-[#f1ede6] text-black transition-all duration-300"
+          className="w-full px-4 py-3 rounded-lg border-2 border-zinc-400 bg-[#f1ede6] text-black transition-all duration-300"
         />
       </div>
 
@@ -98,10 +98,10 @@ export default function ContactForm() {
           id="message"
           name="message"
           value={formData.message}
-          onChange={handleChange}
+          onChange={updateFormField}
           rows="6"
           required
-          className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 bg-[#f1ede6] text-black transition-all duration-300 resize-none"
+          className="w-full px-4 py-3 rounded-lg border-2 border-zinc-400 bg-[#f1ede6] text-black transition-all duration-300 resize-none"
         ></textarea>
       </div>
 
@@ -112,8 +112,8 @@ export default function ContactForm() {
           id="privacyConsent"
           name="privacyConsent"
           checked={formData.privacyConsent}
-          onChange={handleChange}
-          className="mt-1.5 w-5 h-5 rounded border-2 border-gray-400 bg-[#f1ede6] text-[#541409] focus:ring-[#541409] transition-all duration-300"
+          onChange={updateFormField}
+          className="mt-1.5 size-5 rounded border-2 border-zinc-400 bg-[#f1ede6] text-[#541409] focus:ring-[#541409] transition-all duration-300"
         />
         <label htmlFor="privacyConsent" className="text-lg md:text-xl text-[#220d0c] leading-relaxed">
           Acepto la <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#541409] underline hover:text-[#220d0c] transition-colors">política de privacidad</a> y el tratamiento de mis datos personales.
