@@ -3,8 +3,8 @@ export const prerender = true;
 
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
-import imageUrlBuilder from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { createImageUrlBuilder } from "@sanity/image-url";
+import type { SanityImageSource } from "@sanity/image-url";
 import { PortableText } from "astro-portabletext";
 import MainLayout from '../layouts/main.astro';
 import Footer from '../components/Footer.astro';
@@ -33,7 +33,7 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, { slug });
 
 // Helper functions
-const builder = imageUrlBuilder(sanityClient);
+const builder = createImageUrlBuilder(sanityClient);
 function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
