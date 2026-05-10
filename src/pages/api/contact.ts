@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
+import { env } from 'cloudflare:workers';
 import { Resend } from 'resend';
 import escapeHtml from 'escape-html';
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  const resend = new Resend(locals.runtime.env.RESEND_API_KEY);
+export const POST: APIRoute = async ({ request }) => {
+  const resend = new Resend(env.RESEND_API_KEY);
   
   try {
     const data = await request.json();
