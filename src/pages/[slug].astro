@@ -37,10 +37,24 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
     posterUrl,
     caption,
     autoplay
+  },
+  videos[]{
+    r2VideoKey,
+    r2VideoUrl,
+    title,
+    posterKey,
+    posterUrl,
+    caption,
+    autoplay
   }
 }`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, { slug });
 const VIDEO_STYLE_PREVIEW: "minimal" | "framed" | "feature" = "minimal";
+const postVideos = Array.isArray(post.videos) && post.videos.length > 0
+  ? post.videos
+  : post.video
+    ? [post.video]
+    : [];
 
 // Helper functions
 const builder = createImageUrlBuilder(sanityClient);
@@ -78,28 +92,28 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
     <div class="text-center text-xl md:text-2xl text-[#220d0c]">
       {Array.isArray(post.body) && <PortableText value={post.body} />}
     </div>
-    {post.video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "minimal" && (
+    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "minimal" && (
       <section class="py-8">
         <video
           class="w-full h-auto bg-black"
           controls
           preload="metadata"
           playsinline
-          autoplay={post.video.autoplay || undefined}
-          muted={post.video.autoplay || undefined}
-          poster={post.video.posterUrl || undefined}
+          autoplay={video.autoplay || undefined}
+          muted={video.autoplay || undefined}
+          poster={video.posterUrl || undefined}
         >
-          <source src={post.video.r2VideoUrl} type="video/mp4" />
+          <source src={video.r2VideoUrl} type="video/mp4" />
           Your browser does not support this video.
         </video>
-        {Array.isArray(post.video.caption) && post.video.caption.length > 0 && (
+        {Array.isArray(video.caption) && video.caption.length > 0 && (
           <div class="mt-3 text-center text-base md:text-lg text-[#220d0c] opacity-80">
-            <PortableText value={post.video.caption} />
+            <PortableText value={video.caption} />
           </div>
         )}
       </section>
-    )}
-    {post.video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "framed" && (
+    ))}
+    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "framed" && (
       <section class="py-8">
         <div class="max-w-5xl mx-auto border border-[#541409]/20 bg-[#f1ede6] p-4 md:p-6">
           <video
@@ -107,22 +121,22 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
             controls
             preload="metadata"
             playsinline
-            autoplay={post.video.autoplay || undefined}
-            muted={post.video.autoplay || undefined}
-            poster={post.video.posterUrl || undefined}
+            autoplay={video.autoplay || undefined}
+            muted={video.autoplay || undefined}
+            poster={video.posterUrl || undefined}
           >
-            <source src={post.video.r2VideoUrl} type="video/mp4" />
+            <source src={video.r2VideoUrl} type="video/mp4" />
             Your browser does not support this video.
           </video>
-          {Array.isArray(post.video.caption) && post.video.caption.length > 0 && (
+          {Array.isArray(video.caption) && video.caption.length > 0 && (
             <div class="title-font mt-4 text-center text-lg md:text-xl text-[#220d0c]">
-              <PortableText value={post.video.caption} />
+              <PortableText value={video.caption} />
             </div>
           )}
         </div>
       </section>
-    )}
-    {post.video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "feature" && (
+    ))}
+    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "feature" && (
       <section class="py-8">
         <div class="max-w-4xl mx-auto">
           <p class="main-title-font mb-3 text-center text-2xl text-[#541409]">Video</p>
@@ -131,21 +145,21 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
             controls
             preload="metadata"
             playsinline
-            autoplay={post.video.autoplay || undefined}
-            muted={post.video.autoplay || undefined}
-            poster={post.video.posterUrl || undefined}
+            autoplay={video.autoplay || undefined}
+            muted={video.autoplay || undefined}
+            poster={video.posterUrl || undefined}
           >
-            <source src={post.video.r2VideoUrl} type="video/mp4" />
+            <source src={video.r2VideoUrl} type="video/mp4" />
             Your browser does not support this video.
           </video>
-          {Array.isArray(post.video.caption) && post.video.caption.length > 0 && (
+          {Array.isArray(video.caption) && video.caption.length > 0 && (
             <div class="mt-4 text-center text-lg md:text-xl text-[#220d0c]">
-              <PortableText value={post.video.caption} />
+              <PortableText value={video.caption} />
             </div>
           )}
         </div>
       </section>
-    )}
+    ))}
     {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
       <div class="py-8">
         <Masonry breakAt={{ 0: 2, 768: 3 }} gap={4}> // Masonry broken :(
