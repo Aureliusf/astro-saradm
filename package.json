@@ -22,6 +22,7 @@
     "astro-font": "^1.1.0",
     "astro-masonry": "^1.2.2",
     "astro-portabletext": "^0.13.0",
+    "aws4fetch": "^1.0.20",
     "canvas-confetti": "^1.9.3",
     "create-cloudflare": "^2.68.1",
     "escape-html": "^1.0.3",

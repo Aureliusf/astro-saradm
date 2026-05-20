@@ -5,5 +5,13 @@ compatibility_flags = [ "nodejs_compat", "global_fetch_strictly_public" ]
 [assets]
 directory = "./dist/client"
 
+[vars]
+R2_BUCKET_NAME = "saradm-videos"
+R2_PUBLIC_BASE_URL = "https://videos.saradm.com"
+
+[[r2_buckets]]
+binding = "SARADM_VIDEOS"
+bucket_name = "saradm-videos"
+
 [observability]
 enabled = true
