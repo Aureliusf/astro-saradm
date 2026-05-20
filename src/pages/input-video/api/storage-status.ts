@@ -3,7 +3,7 @@ import { env } from 'cloudflare:workers';
 import { errorResponse, getRequiredStorage, jsonResponse, methodNotAllowed } from '../../../utils/videoStorage';
 
 export const GET: APIRoute = async () => {
-  const storage = getRequiredStorage(env, true);
+  const storage = getRequiredStorage(env);
   if (!storage) {
     return errorResponse('Video storage is not configured.', 'VIDEO_STORAGE_NOT_CONFIGURED', 500);
   }

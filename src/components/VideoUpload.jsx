@@ -80,13 +80,6 @@ async function createPoster(file) {
   }
 }
 
-async function uploadWithRetry(url, blob, headers) {
-  const upload = () => fetch(url, { method: 'PUT', headers, body: blob });
-  let response = await upload();
-  if (!response.ok) response = await upload();
-  if (!response.ok) throw new Error('upload_failed');
-}
-
 export default function VideoUpload() {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
@@ -181,44 +174,19 @@ export default function VideoUpload() {
 
     setStatus('uploading');
     try {
-      const createResponse = await fetch('/input-video/api/create-upload', {
+      const formData = new FormData();
+      formData.set('title', title);
+      formData.set('video', file, file.name);
+      if (posterBlob) formData.set('poster', posterBlob, 'poster.jpg');
+
+      const uploadResponse = await fetch('/input-video/api/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          filename: file.name,
-          size: file.size,
-          contentType: file.type,
-          includePoster: Boolean(posterBlob),
-        }),
+        body: formData,
       });
-      const createData = await createResponse.json();
-      if (!createResponse.ok) throw new Error(createData.error || 'Could not start upload.');
+      const uploadData = await uploadResponse.json();
+      if (!uploadResponse.ok) throw new Error(uploadData.error || 'Upload failed.');
 
-      await fetch(createData.video.uploadUrl, {
-        method: 'PUT',
-        headers: createData.video.requiredHeaders,
-        body: file,
-      }).then((response) => {
-        if (!response.ok) throw new Error('Video upload failed.');
-      });
-
-      if (posterBlob && createData.poster) {
-        await uploadWithRetry(createData.poster.uploadUrl, posterBlob, createData.poster.requiredHeaders);
-      }
-
-      const completeResponse = await fetch('/input-video/api/complete-upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          key: createData.video.key,
-          posterKey: createData.poster?.key,
-        }),
-      });
-      const completeData = await completeResponse.json();
-      if (!completeResponse.ok) throw new Error(completeData.error || 'Could not complete upload.');
-
-      setResult(completeData);
+      setResult(uploadData);
       setStatus('done');
       await loadRecentVideos();
       window.setTimeout(loadRecentVideos, 30000);
@@ -249,7 +217,7 @@ export default function VideoUpload() {
         ) : (
           <p className="mt-1 text-sm text-[#8b1f11]">
             {storageStatus.error || 'Video storage is not configured.'} Uploads are disabled until the
-            R2 bucket, binding, and S3 credentials are configured.
+            R2 bucket binding is configured.
           </p>
         )}
       </section>
