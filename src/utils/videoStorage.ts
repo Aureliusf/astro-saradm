@@ -10,6 +10,7 @@ export const VIDEO_CORS_ORIGINS = new Set([
   'https://saradm.com',
   'https://www.saradm.com',
   'https://www.sanity.io',
+  'https://saradm.sanity.studio',
   'http://localhost:4321',
   'http://localhost:3333',
 ]);

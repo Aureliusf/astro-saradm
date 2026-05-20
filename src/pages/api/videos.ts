@@ -19,15 +19,15 @@ export const OPTIONS: APIRoute = async ({ request }) => {
 };
 
 export const GET: APIRoute = async ({ request }) => {
+  const corsHeaders = getCorsHeaders(request);
   const storage = getRequiredStorage(env);
   if (!storage) {
-    return errorResponse('Video storage is not configured.', 'VIDEO_STORAGE_NOT_CONFIGURED', 500);
+    return errorResponse('Video storage is not configured.', 'VIDEO_STORAGE_NOT_CONFIGURED', 500, corsHeaders);
   }
 
   const url = new URL(request.url);
   const limit = Math.min(Math.max(Number(url.searchParams.get('limit') || 100), 1), 100);
   const cursor = url.searchParams.get('cursor') || undefined;
-  const corsHeaders = getCorsHeaders(request);
 
   try {
     const list = await storage.bucket.list({ prefix: 'videos/', limit, cursor });
