@@ -66,8 +66,10 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  const videoHead = await storage.bucket.head(videoKey);
-  const posterHead = await storage.bucket.head(posterKey).catch(() => null);
+  const [videoHead, posterHead] = await Promise.all([
+    storage.bucket.head(videoKey),
+    storage.bucket.head(posterKey).catch(() => null),
+  ]);
   const videoValidation = validateVideoObject(videoHead);
   const posterValidation = validatePosterObject(posterHead);
 

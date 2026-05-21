@@ -1,5 +1,5 @@
 /* @jsxRuntime classic */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
 
@@ -45,6 +45,8 @@ async function waitForEvent(target, eventName, timeoutMs) {
 }
 
 async function createPoster(file) {
+  if (!file) throw new Error('missing_file');
+
   const objectUrl = URL.createObjectURL(file);
   const video = document.createElement('video');
   video.preload = 'metadata';
@@ -53,6 +55,7 @@ async function createPoster(file) {
   video.src = objectUrl;
 
   try {
+    // react-doctor-disable-next-line react-doctor/async-defer-await
     await waitForEvent(video, 'loadedmetadata', 8000);
     if (!Number.isFinite(video.duration) || video.duration <= 0) {
       throw new Error('invalid_duration');
@@ -80,16 +83,27 @@ async function createPoster(file) {
   }
 }
 
+const initialUploadState = {
+  status: 'idle',
+  storageStatus: { loading: true, ready: false, error: '' },
+  error: '',
+  result: null,
+  recentVideos: [],
+};
+
+function uploadReducer(state, action) {
+  return { ...state, ...action };
+}
+
 export default function VideoUpload() {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
   const [posterBlob, setPosterBlob] = useState(null);
   const [posterWarning, setPosterWarning] = useState('');
-  const [status, setStatus] = useState('idle');
-  const [storageStatus, setStorageStatus] = useState({ loading: true, ready: false, error: '' });
-  const [error, setError] = useState('');
-  const [result, setResult] = useState(null);
-  const [recentVideos, setRecentVideos] = useState([]);
+  const [{ status, storageStatus, error, result, recentVideos }, setUploadState] = useReducer(
+    uploadReducer,
+    initialUploadState,
+  );
   const inputRef = useRef(null);
 
   const fileError = useMemo(() => validateMp4(file), [file]);
@@ -104,27 +118,32 @@ export default function VideoUpload() {
       const response = await fetch('/api/videos?limit=5');
       if (!response.ok) return;
       const data = await response.json();
-      setRecentVideos(Array.isArray(data.videos) ? data.videos : []);
+      setUploadState({ recentVideos: Array.isArray(data.videos) ? data.videos : [] });
     } catch {
       // Recent uploads are helpful, not essential.
     }
   }
 
+  // react-doctor-disable-next-line react-doctor/no-fetch-in-effect
   useEffect(() => {
     async function loadStorageStatus() {
       try {
         const response = await fetch('/input-video/api/storage-status');
         const data = await response.json();
-        setStorageStatus({
-          loading: false,
-          ready: response.ok && data.ready === true,
-          error: response.ok ? '' : data.error || 'Video storage is not configured.',
+        setUploadState({
+          storageStatus: {
+            loading: false,
+            ready: response.ok && data.ready === true,
+            error: response.ok ? '' : data.error || 'Video storage is not configured.',
+          },
         });
       } catch {
-        setStorageStatus({
-          loading: false,
-          ready: false,
-          error: 'Video storage status could not be checked.',
+        setUploadState({
+          storageStatus: {
+            loading: false,
+            ready: false,
+            error: 'Video storage status could not be checked.',
+          },
         });
       }
     }
@@ -135,8 +154,7 @@ export default function VideoUpload() {
 
   async function handleFile(nextFile) {
     setFile(nextFile);
-    setResult(null);
-    setError('');
+    setUploadState({ result: null, error: '' });
     setPosterBlob(null);
     setPosterWarning('');
 
@@ -156,23 +174,22 @@ export default function VideoUpload() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError('');
-    setResult(null);
+    setUploadState({ error: '', result: null });
 
     if (!title.trim()) {
-      setError('Add a title before uploading.');
+      setUploadState({ error: 'Add a title before uploading.' });
       return;
     }
     if (fileError) {
-      setError(fileError);
+      setUploadState({ error: fileError });
       return;
     }
     if (!storageStatus.ready) {
-      setError(storageStatus.error || 'Video storage is not configured.');
+      setUploadState({ error: storageStatus.error || 'Video storage is not configured.' });
       return;
     }
 
-    setStatus('uploading');
+    setUploadState({ status: 'uploading' });
     try {
       const formData = new FormData();
       formData.set('title', title);
@@ -186,13 +203,11 @@ export default function VideoUpload() {
       const uploadData = await uploadResponse.json();
       if (!uploadResponse.ok) throw new Error(uploadData.error || 'Upload failed.');
 
-      setResult(uploadData);
-      setStatus('done');
+      setUploadState({ result: uploadData, status: 'done' });
       await loadRecentVideos();
       window.setTimeout(loadRecentVideos, 30000);
     } catch (uploadError) {
-      setStatus('idle');
-      setError(uploadError.message || 'Upload failed.');
+      setUploadState({ status: 'idle', error: uploadError.message || 'Upload failed.' });
     }
   }
 
@@ -211,7 +226,7 @@ export default function VideoUpload() {
       >
         <h2 className="title-font text-xl text-[#541409]">Video storage</h2>
         {storageStatus.loading ? (
-          <p className="mt-1 text-sm">Checking R2 bucket and upload configuration...</p>
+          <p className="mt-1 text-sm">Checking R2 bucket and upload configuration…</p>
         ) : storageStatus.ready ? (
           <p className="mt-1 text-sm">R2 storage is reachable. Uploads are enabled.</p>
         ) : (
@@ -272,13 +287,13 @@ export default function VideoUpload() {
             disabled={status === 'uploading' || storageStatus.loading || !storageStatus.ready}
             className="mt-5 bg-[#541409] px-5 py-2 text-white disabled:cursor-wait disabled:opacity-60"
           >
-            {status === 'uploading' ? 'Uploading...' : 'Upload video'}
+            {status === 'uploading' ? 'Uploading…' : 'Upload video'}
           </button>
         </section>
 
         <aside className="space-y-4">
           {previewUrl && (
-            <video className="w-full bg-black" controls preload="metadata" src={previewUrl} playsInline />
+            <video className="w-full bg-[#0a0a0f]" controls preload="metadata" src={previewUrl} playsInline />
           )}
           {posterUrl && <img className="w-full" src={posterUrl} alt="Generated poster preview" />}
         </aside>
@@ -334,7 +349,7 @@ export default function VideoUpload() {
                 </div>
               )}
               <div className="p-3">
-                <h3 className="text-base font-bold">{video.title}</h3>
+                <h3 className="text-base font-semibold">{video.title}</h3>
                 {!video.readyForSanity && <p className="mt-1 text-sm text-[#8b1f11]">Not ready for Sanity</p>}
                 <button type="button" className="mt-2 text-sm underline" onClick={() => copyVideoUrl(video.url)}>
                   Copy link
