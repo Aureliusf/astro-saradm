@@ -22,9 +22,47 @@ const hasHighlightText = (video: VideoItem) =>
 
 const hasMakingOfImages = (video: VideoItem) =>
   Array.isArray(video.makingOfImages) && video.makingOfImages.some((image: any) => image?.image)
+
+const hasAnyMakingOfImages = validVideos.some((video) => hasMakingOfImages(video))
 ---
 
-{validVideos.map((video) => {
+{validVideos.length > 0 && !hasAnyMakingOfImages && (
+  <section class="py-8">
+    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
+      {validVideos.map((video, index) => {
+        const isCenteredTail = validVideos.length % 2 === 1 && index === validVideos.length - 1
+        return (
+          <div
+            class:list={[
+              'w-full',
+              isCenteredTail && 'md:col-span-2 md:mx-auto md:w-[calc((100%-1.5rem)/2)]',
+            ]}
+          >
+            <video
+              class="video-player w-full h-auto bg-black"
+              controls
+              preload="metadata"
+              playsinline
+              autoplay={video.autoplay || undefined}
+              muted={video.autoplay || undefined}
+              poster={video.posterUrl || undefined}
+            >
+              <source src={video.r2VideoUrl} type="video/mp4" />
+              Your browser does not support this video.
+            </video>
+            {hasHighlightText(video) && (
+              <div class="mt-4 text-center text-base md:text-lg text-[#220d0c] opacity-80">
+                <PortableText value={video.caption} />
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  </section>
+)}
+
+{hasAnyMakingOfImages && validVideos.map((video) => {
   const withPhotos = hasMakingOfImages(video)
   return (
     <section class="py-8">
