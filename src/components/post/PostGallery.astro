@@ -1,0 +1,15 @@
+---
+import PostMasonryImages from './PostMasonryImages.astro'
+
+interface Props {
+  gallery?: unknown[]
+}
+
+const {gallery} = Astro.props
+---
+
+{Array.isArray(gallery) && gallery.length > 0 && (
+  <div class="py-8">
+    <PostMasonryImages images={gallery as any} desktopColumns={3} />
+  </div>
+)}

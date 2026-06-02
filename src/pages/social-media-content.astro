@@ -1,0 +1,68 @@
+---
+export const prerender = true
+
+import type {SanityDocument} from '@sanity/client'
+import {sanityClient} from 'sanity:client'
+import MainLayout from '../layouts/main.astro'
+import Footer from '../components/Footer.astro'
+import {createImageHelpers} from '../components/post/imageUtils'
+
+const {generateImageProps} = createImageHelpers(sanityClient)
+
+const POSTS_QUERY = `*[_type == "post" && 'Social Media Content SMC' in tags[]->name] |
+order(publishedAt desc) |
+{
+  _id,
+  title,
+  slug,
+  cover,
+  publishedAt,
+  "tags": tags[]->name
+}`
+
+const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY)
+---
+
+<MainLayout title="Social Media Content">
+  <main class="container mx-auto min-h-screen px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8">
+    <h1>Social Media Content</h1>
+
+    {posts.length === 0 ? (
+      <p class="text-center text-xl text-[#220d0c]">No social media content posts yet.</p>
+    ) : (
+      <ul id="post-gallery" class="md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3">
+        {posts.map((post) => {
+          if (!post.cover || !post.cover.image) return null
+          const imageProps = generateImageProps(
+            post.cover.image,
+            '(min-width: 768px) 352px, calc(100vw - 2rem)',
+          )
+          return (
+            <li class="post-item group relative overflow-hidden rounded-lg shadow-lg">
+              <a href={`/${post.slug.current}`} class="block">
+                <div class="relative">
+                  <img
+                    src={imageProps.src}
+                    srcset={imageProps.srcset}
+                    sizes={imageProps.sizes}
+                    alt={post.cover.alt || post.title || ''}
+                    class="grayscale group-hover:grayscale-0 w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105 group-hover:blur-xs"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="absolute inset-0 flex flex-col items-center justify-center bg-[#220d0c] bg-opacity-30 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+                    <h2 class="text-xl font-bold text-white text-center">{post.title}</h2>
+                    <p class="text-white text-center">
+                      {new Date(post.publishedAt).getFullYear()}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    )}
+  </main>
+</MainLayout>
+<Footer />

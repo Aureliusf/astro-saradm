@@ -1,0 +1,54 @@
+---
+import {sanityClient} from 'sanity:client'
+import type {SanityImageSource} from '@sanity/image-url'
+import {createImageHelpers} from './imageUtils'
+
+type ImageWithAlt = {
+  image?: SanityImageSource
+  alt?: string
+}
+
+interface Props {
+  images?: ImageWithAlt[]
+  desktopColumns?: 2 | 3
+  sizes?: string
+  class?: string
+  imageClass?: string
+}
+
+const {
+  images = [],
+  desktopColumns = 3,
+  sizes = '(min-width: 768px) 33vw, 50vw',
+  class: className = '',
+  imageClass = '',
+} = Astro.props
+
+const {generateImageProps} = createImageHelpers(sanityClient)
+const validImages = images.filter((imageWithAlt) => imageWithAlt?.image)
+---
+
+{validImages.length > 0 && (
+  <div
+    class:list={[
+      'gap-1 [column-fill:balance]',
+      desktopColumns === 2 ? 'columns-2' : 'columns-2 md:columns-3',
+      className,
+    ]}
+  >
+    {validImages.map((imageWithAlt) => {
+      const imageProps = generateImageProps(imageWithAlt.image!, sizes)
+      return (
+        <img
+          src={imageProps.src}
+          srcset={imageProps.srcset}
+          sizes={sizes}
+          alt={imageWithAlt.alt || ''}
+          class:list={['mb-1 w-full break-inside-avoid h-auto', imageClass]}
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    })}
+  </div>
+)}

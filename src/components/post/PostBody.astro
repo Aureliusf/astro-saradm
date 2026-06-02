@@ -1,0 +1,15 @@
+---
+import {PortableText} from 'astro-portabletext'
+
+interface Props {
+  body?: unknown[]
+}
+
+const {body} = Astro.props
+---
+
+{Array.isArray(body) && body.length > 0 && (
+  <div class="text-center text-xl md:text-2xl text-[#220d0c]">
+    <PortableText value={body} />
+  </div>
+)}

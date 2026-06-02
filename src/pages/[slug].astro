@@ -3,12 +3,13 @@ export const prerender = true;
 
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
-import { createImageUrlBuilder } from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url";
-import { PortableText } from "astro-portabletext";
 import MainLayout from '../layouts/main.astro';
 import Footer from '../components/Footer.astro';
-import { Masonry } from 'astro-masonry';
+import PostBackLink from '../components/post/PostBackLink.astro';
+import PostBody from '../components/post/PostBody.astro';
+import PostCredits from '../components/post/PostCredits.astro';
+import PostGallery from '../components/post/PostGallery.astro';
+import PostVideos from '../components/post/PostVideos.astro';
 
 // This function runs at build time to find all the paths to generate.
 export async function getStaticPaths() {
@@ -36,47 +37,48 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
     posterKey,
     posterUrl,
     caption,
-    autoplay
+    autoplay,
+    makingOfImages[]{
+      image,
+      alt
+    }
   },
   videos[]{
+    _type,
+    _key,
     r2VideoKey,
     r2VideoUrl,
     title,
     posterKey,
     posterUrl,
     caption,
-    autoplay
+    autoplay,
+    makingOfImages[]{
+      image,
+      alt
+    }
   }
 }`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, { slug });
-const VIDEO_STYLE_PREVIEW: "minimal" | "framed" | "feature" = "minimal";
 const postVideos = Array.isArray(post.videos) && post.videos.length > 0
-  ? post.videos
+  ? post.videos.filter((item: SanityDocument) => item?._type === 'videoWithR2' || item?.r2VideoUrl)
   : post.video
     ? [post.video]
     : [];
-const hasVideoCaption = (video: SanityDocument) => Array.isArray(video.caption) && video.caption.length > 0;
-
-// Helper functions
-const builder = createImageUrlBuilder(sanityClient);
-function urlFor(source: SanityImageSource) {
-  return builder.image(source);
-}
-function generateImageProps(image: SanityImageSource) {
-  const base = urlFor(image).quality(90).auto('format');
-  return {
-    src: base.width(800).url(),
-    srcset: [400, 800, 1200]
-      .map(w => `${base.width(w).url()} ${w}w`)
-      .join(', '),
-    sizes: '(min-width: 768px) 33vw, 50vw',
-  };
-}
 
 // Conditional link logic
 const hasAssistingTag = post.tags?.includes('Asistente');
-const backLinkUrl = hasAssistingTag ? '/assisting' : '/posts';
-const backLinkText = hasAssistingTag ? 'Todas mis colaboraciones' : 'Todos mis proyectos';
+const hasSocialMediaContentTag = post.tags?.includes('Social Media Content SMC');
+const backLinkUrl = hasAssistingTag
+  ? '/assisting'
+  : hasSocialMediaContentTag
+    ? '/social-media-content'
+    : '/posts';
+const backLinkText = hasAssistingTag
+  ? 'Todas mis colaboraciones'
+  : hasSocialMediaContentTag
+    ? 'Todo mi SMC'
+    : 'Todos mis proyectos';
 
 // Conditional format for Runways
 const isRunway = post.tags?.includes('Pasarela');
@@ -85,153 +87,16 @@ const creditsSection = isRunway ? 'Enlaces de Interés' : 'Créditos';
 
 <MainLayout title={post.title}>
   <main class="container mx-auto min-h-screen px-4 md:px-8 pt-2 md:pt-4 pb-4 md:pb-8 flex flex-col gap-4 bg-white">
-    <a href={backLinkUrl} class="title-font text-[#220d0c] md:text-xl  text-left hover:underline">&larr;{backLinkText}</a>
+    <PostBackLink href={backLinkUrl} text={backLinkText} />
     <h1>{post.title}</h1>
     <div class="text-center text-2xl md:text-3xl gap-1">
       <p class="title-font text-[#541409] opacity-60">{new Date(post.publishedAt).getFullYear()}</p>
     </div>
-    <div class="text-center text-xl md:text-2xl text-[#220d0c]">
-      {Array.isArray(post.body) && <PortableText value={post.body} />}
-    </div>
-    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "minimal" && (
-      <section class="py-8">
-        <div class:list={[
-          "mx-auto gap-6",
-          hasVideoCaption(video) ? "grid max-w-6xl md:grid-cols-2 md:items-start" : "max-w-5xl"
-        ]}>
-          <video
-            class="video-player w-full h-auto bg-black"
-            controls
-            preload="metadata"
-            playsinline
-            autoplay={video.autoplay || undefined}
-            muted={video.autoplay || undefined}
-            poster={video.posterUrl || undefined}
-          >
-            <source src={video.r2VideoUrl} type="video/mp4" />
-            Your browser does not support this video.
-          </video>
-          {hasVideoCaption(video) && (
-            <div class="mt-3 text-center text-base md:mt-0 md:text-left md:text-lg text-[#220d0c] opacity-80">
-              <PortableText value={video.caption} />
-            </div>
-          )}
-        </div>
-      </section>
-    ))}
-    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "framed" && (
-      <section class="py-8">
-        <div class:list={[
-          "mx-auto border border-[#541409]/20 bg-[#f1ede6] p-4 md:p-6 gap-6",
-          hasVideoCaption(video) ? "grid max-w-6xl md:grid-cols-2 md:items-start" : "max-w-5xl"
-        ]}>
-          <video
-            class="video-player w-full h-auto bg-black"
-            controls
-            preload="metadata"
-            playsinline
-            autoplay={video.autoplay || undefined}
-            muted={video.autoplay || undefined}
-            poster={video.posterUrl || undefined}
-          >
-            <source src={video.r2VideoUrl} type="video/mp4" />
-            Your browser does not support this video.
-          </video>
-          {hasVideoCaption(video) && (
-            <div class="title-font mt-4 text-center text-lg md:mt-0 md:text-left md:text-xl text-[#220d0c]">
-              <PortableText value={video.caption} />
-            </div>
-          )}
-        </div>
-      </section>
-    ))}
-    {postVideos.map((video) => video?.r2VideoUrl && VIDEO_STYLE_PREVIEW === "feature" && (
-      <section class="py-8">
-        <div class="max-w-6xl mx-auto">
-          <p class="main-title-font mb-3 text-center text-2xl text-[#541409]">Video</p>
-          <div class:list={[
-            "gap-6",
-            hasVideoCaption(video) ? "grid md:grid-cols-2 md:items-start" : "max-w-4xl mx-auto"
-          ]}>
-            <video
-              class="video-player w-full h-auto bg-black"
-              controls
-              preload="metadata"
-              playsinline
-              autoplay={video.autoplay || undefined}
-              muted={video.autoplay || undefined}
-              poster={video.posterUrl || undefined}
-            >
-              <source src={video.r2VideoUrl} type="video/mp4" />
-              Your browser does not support this video.
-            </video>
-            {hasVideoCaption(video) && (
-              <div class="mt-4 text-center text-lg md:mt-0 md:text-left md:text-xl text-[#220d0c]">
-                <PortableText value={video.caption} />
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-    ))}
-    {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
-      <div class="py-8">
-        <Masonry breakAt={{ 0: 2, 768: 3 }} gap={4}> // Masonry broken :(
-
-          {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
-            if (!imageWithAlt.image) return null;
-            const imageProps = generateImageProps(imageWithAlt.image);
-            return (
-              <img
-                src={imageProps.src}
-                srcset={imageProps.srcset}
-                alt={imageWithAlt.alt || ""}
-                class="w-full h-auto"
-                loading="lazy"
-                decoding="async"
-              />
-            );
-          })}
-        </Masonry>
-      </div>
-    )}
-        
-    {post.credits && post.credits.length > 0 && (
-      <>
-        <h2 class="main-title-font text-center text-2xl md:text-3xl font-bold text-[#541409] ">{creditsSection}</h2>
-        <div class="text-base md:text-xl text-[#220d0c]">
-          <PortableText value={post.credits} />
-        </div>
-      </>
-    )}
-    <a href={backLinkUrl} class="title-font text-[#220d0c] md:text-xl  text-right hover:underline">&larr;{backLinkText}</a>
+    <PostBody body={post.body} />
+    <PostVideos videos={postVideos} />
+    <PostGallery gallery={post.gallery} />
+    <PostCredits credits={post.credits} title={creditsSection} />
+    <PostBackLink href={backLinkUrl} text={backLinkText} align="right" />
   </main>
-  <script>
-    const markVideoOrientation = (video: HTMLVideoElement) => {
-      if (video.videoHeight > video.videoWidth) {
-        video.classList.add('is-vertical');
-      } else {
-        video.classList.remove('is-vertical');
-      }
-    };
-
-    document.querySelectorAll<HTMLVideoElement>('.video-player').forEach((video) => {
-      if (video.readyState >= 1) {
-        markVideoOrientation(video);
-      } else {
-        video.addEventListener('loadedmetadata', () => markVideoOrientation(video), { once: true });
-      }
-    });
-  </script>
-
-  <style>
-    .video-player.is-vertical {
-      max-height: 66.666vh;
-      width: auto;
-      max-width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  </style>
 </MainLayout>
 <Footer />

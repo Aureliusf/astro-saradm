@@ -1,0 +1,114 @@
+---
+import {PortableText} from 'astro-portabletext'
+import PostMasonryImages from './PostMasonryImages.astro'
+
+type VideoItem = {
+  r2VideoUrl?: string
+  posterUrl?: string
+  caption?: unknown[]
+  autoplay?: boolean
+  makingOfImages?: unknown[]
+}
+
+interface Props {
+  videos?: VideoItem[]
+}
+
+const {videos = []} = Astro.props
+const validVideos = videos.filter((video) => video?.r2VideoUrl)
+
+const hasHighlightText = (video: VideoItem) =>
+  Array.isArray(video.caption) && video.caption.length > 0
+
+const hasMakingOfImages = (video: VideoItem) =>
+  Array.isArray(video.makingOfImages) && video.makingOfImages.some((image: any) => image?.image)
+---
+
+{validVideos.map((video) => {
+  const withPhotos = hasMakingOfImages(video)
+  return (
+    <section class="py-8">
+      <div class:list={['mx-auto', withPhotos ? 'max-w-6xl' : 'max-w-5xl']}>
+        <div
+          class:list={[
+            'gap-4 md:gap-6',
+            withPhotos && 'md:grid md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.72fr)] md:items-stretch',
+          ]}
+        >
+          <video
+            class="video-player w-full h-auto bg-black"
+            controls
+            preload="metadata"
+            playsinline
+            autoplay={video.autoplay || undefined}
+            muted={video.autoplay || undefined}
+            poster={video.posterUrl || undefined}
+          >
+            <source src={video.r2VideoUrl} type="video/mp4" />
+            Your browser does not support this video.
+          </video>
+          {withPhotos && (
+            <div class="making-of-column mt-4 overflow-hidden md:mt-0">
+              <PostMasonryImages
+                images={video.makingOfImages as any}
+                desktopColumns={2}
+                sizes="(min-width: 768px) 28vw, 50vw"
+                imageClass="object-cover"
+              />
+            </div>
+          )}
+        </div>
+        {hasHighlightText(video) && (
+          <div class="mt-4 text-center text-base md:text-lg text-[#220d0c] opacity-80">
+            <PortableText value={video.caption} />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+})}
+
+<script>
+  const markVideoOrientation = (video: HTMLVideoElement) => {
+    if (video.videoHeight > video.videoWidth) {
+      video.classList.add('is-vertical');
+    } else {
+      video.classList.remove('is-vertical');
+    }
+
+    const sectionGrid = video.parentElement;
+    const photoColumn = sectionGrid?.querySelector<HTMLElement>('.making-of-column');
+    if (photoColumn) {
+      photoColumn.style.maxHeight = `${video.clientHeight}px`;
+    }
+  };
+
+  const markAllVideoOrientations = () => {
+    document.querySelectorAll<HTMLVideoElement>('.video-player').forEach((video) => {
+      if (video.readyState >= 1) {
+        markVideoOrientation(video);
+      } else {
+        video.addEventListener('loadedmetadata', () => markVideoOrientation(video), { once: true });
+      }
+    });
+  };
+
+  markAllVideoOrientations();
+  window.addEventListener('resize', markAllVideoOrientations);
+</script>
+
+<style>
+  .video-player.is-vertical {
+    max-height: 66.666vh;
+    width: auto;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 767px) {
+    .making-of-column {
+      max-height: none !important;
+    }
+  }
+</style>

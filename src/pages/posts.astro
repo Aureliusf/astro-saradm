@@ -25,7 +25,11 @@ function generateImageProps(image: any, sizes: string) {
   };
 }
 
-const POSTS_QUERY = `*[_type == "post" && !('Asistente' in tags[]->name)] | 
+const POSTS_QUERY = `*[
+  _type == "post" &&
+  !('Asistente' in tags[]->name) &&
+  !('Social Media Content SMC' in tags[]->name)
+] | 
 order(publishedAt desc) |
 {
   _id,

@@ -1,0 +1,19 @@
+---
+interface Props {
+  href: string
+  text: string
+  align?: 'left' | 'right'
+}
+
+const {href, text, align = 'left'} = Astro.props
+---
+
+<a
+  href={href}
+  class:list={[
+    'title-font text-[#220d0c] md:text-xl hover:underline',
+    align === 'right' ? 'text-right' : 'text-left',
+  ]}
+>
+  &larr;{text}
+</a>
